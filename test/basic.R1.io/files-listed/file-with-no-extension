@@ -1,0 +1,159 @@
+[KB885836.log]
+0.641: ================================================================================
+0.641: 2006/08/02 16:07:45.609 (local)
+0.641: d:\46033834c9e041b544bf80ef7fabb5\update\update.exe (version 5.5.33.0)
+0.656: Service Pack started with following command line: /quiet /passive /norestart
+0.750: ---- Old Information In The Registry ------
+0.750: Source:C:\WINDOWS\system32\SET1B.tmp (5.1.2600.2603)
+0.750: Destination:C:\WINDOWS\system32\msgina.dll (5.1.2600.2180)
+0.750: Source:C:\WINDOWS\system32\DllCache\SET1C.tmp (5.1.2600.2603)
+0.750: Destination:C:\WINDOWS\system32\DllCache\msgina.dll (5.1.2600.2180)
+0.750: Source:C:\WINDOWS\system32\SET1F.tmp (5.1.2600.2505)
+0.750: Destination:C:\WINDOWS\system32\winlogon.exe (5.1.2600.2180)
+0.750: Source:C:\WINDOWS\system32\SET32.tmp (6.0.2900.2801)
+0.750: Destination:C:\WINDOWS\system32\themeui.dll (6.0.2900.2180)
+0.750: Source:C:\WINDOWS\system32\SET3C.tmp (6.0.2900.2823)
+0.750: Destination:C:\WINDOWS\system32\wininet.dll (6.0.2900.2180)
+0.750: Source:C:\WINDOWS\system32\SET3D.tmp (6.0.2900.2823)
+0.750: Destination:C:\WINDOWS\system32\urlmon.dll (6.0.2900.2180)
+0.766: Source:C:\WINDOWS\system32\SET3E.tmp (6.0.2900.2823)
+0.766: Destination:C:\WINDOWS\system32\shlwapi.dll (6.0.2900.2180)
+0.766: Source:C:\WINDOWS\system32\SET3F.tmp (6.0.2900.2823)
+0.766: Destination:C:\WINDOWS\system32\shdocvw.dll (6.0.2900.2180)
+0.766: Source:C:\WINDOWS\system32\SET44.tmp (6.0.2900.2838)
+0.766: Destination:C:\WINDOWS\system32\mshtml.dll (6.0.2900.2180)
+0.766: Source:C:\WINDOWS\system32\SET4A.tmp (6.0.2900.2823)
+0.766: Destination:C:\WINDOWS\system32\browseui.dll (6.0.2900.2180)
+0.766: Source:C:\WINDOWS\system32\SET5D.tmp (5.1.2600.2843)
+0.766: Destination:C:\WINDOWS\system32\xpsp3res.dll (5.1.2600.2703)
+0.766: Source:C:\WINDOWS\system32\SET67.tmp (5.1.2600.2780)
+0.766: Destination:C:\WINDOWS\system32\esent.dll (5.1.2600.2180)
+0.766: ---- New Information In The Registry ------
+0.766: Source:C:\WINDOWS\system32\SET1B.tmp (5.1.2600.2603)
+0.766: Destination:C:\WINDOWS\system32\msgina.dll (5.1.2600.2180)
+0.766: Source:C:\WINDOWS\system32\DllCache\SET1C.tmp (5.1.2600.2603)
+0.766: Destination:C:\WINDOWS\system32\DllCache\msgina.dll (5.1.2600.2180)
+0.766: Source:C:\WINDOWS\system32\SET1F.tmp (5.1.2600.2505)
+0.766: Destination:C:\WINDOWS\system32\winlogon.exe (5.1.2600.2180)
+0.766: Source:C:\WINDOWS\system32\SET32.tmp (6.0.2900.2801)
+0.766: Destination:C:\WINDOWS\system32\themeui.dll (6.0.2900.2180)
+0.766: Source:C:\WINDOWS\system32\SET3C.tmp (6.0.2900.2823)
+0.766: Destination:C:\WINDOWS\system32\wininet.dll (6.0.2900.2180)
+0.766: Source:C:\WINDOWS\system32\SET3D.tmp (6.0.2900.2823)
+0.766: Destination:C:\WINDOWS\system32\urlmon.dll (6.0.2900.2180)
+0.766: Source:C:\WINDOWS\system32\SET3E.tmp (6.0.2900.2823)
+0.766: Destination:C:\WINDOWS\system32\shlwapi.dll (6.0.2900.2180)
+0.766: Source:C:\WINDOWS\system32\SET3F.tmp (6.0.2900.2823)
+0.766: Destination:C:\WINDOWS\system32\shdocvw.dll (6.0.2900.2180)
+0.766: Source:C:\WINDOWS\system32\SET44.tmp (6.0.2900.2838)
+0.766: Destination:C:\WINDOWS\system32\mshtml.dll (6.0.2900.2180)
+0.766: Source:C:\WINDOWS\system32\SET4A.tmp (6.0.2900.2823)
+0.766: Destination:C:\WINDOWS\system32\browseui.dll (6.0.2900.2180)
+0.766: Source:C:\WINDOWS\system32\SET5D.tmp (5.1.2600.2843)
+0.766: Destination:C:\WINDOWS\system32\xpsp3res.dll (5.1.2600.2703)
+0.766: Source:C:\WINDOWS\system32\SET67.tmp (5.1.2600.2780)
+0.766: Destination:C:\WINDOWS\system32\esent.dll (5.1.2600.2180)
+0.766: SetProductTypes: InfProductBuildType=BuildType.IP
+0.766: SetAltOsLoaderPath: No section uses DirId 65701; done.
+0.781: DoInstallation: FetchSourceURL for d:\46033834c9e041b544bf80ef7fabb5\update\update_SP2GDR.inf failed
+0.781: CreateUninstall = 1,Directory = C:\WINDOWS\$NtUninstallKB885836$ 
+0.781: LoadFileQueues: SetupGetSourceFileLocation for halaacpi.dll failed: 0xe0000102
+0.781: BuildCabinetManifest: update.url absent
+0.781: Starting AnalyzeComponents
+0.781: AnalyzePhaseZero used 0 ticks
+0.781: No c:\windows\INF\updtblk.inf file.
+0.781: OEM file scan used 0 ticks
+0.812: AnalyzePhaseOne: used 31 ticks
+0.812: AnalyzeComponents: Hotpatch analysis disabled; skipping.
+0.812: AnalyzeComponents: Hotpatching is disabled.
+0.812: FindFirstFile c:\windows\$hf_mig$\*.*
+0.812: KB885836 Setup encountered an error:  The  update.ver file is not correct.
+0.828: AnalyzeForBranching used 16 ticks.
+0.828: AnalyzePhaseTwo used 0 ticks
+0.828: AnalyzePhaseThree used 0 ticks
+0.828: AnalyzePhaseFive used 0 ticks
+0.828: AnalyzePhaseSix used 0 ticks
+0.828: AnalyzeComponents used 47 ticks
+0.828: Downloading 0 files
+0.828: bPatchMode = FALSE
+0.828: Inventory complete: ReturnStatus=0, 47 ticks
+0.828: Num Ticks for invent : 47
+0.969: Allocation size of drive C: is 4096 bytes, free space = 6601330688 bytes
+0.969: AnalyzeDiskUsage:  Skipping EstimateDiskUsageForUninstall.
+0.969: Drive C: free 6295MB req: 9MB w/uninstall: NOT CALCULATED.
+0.969: CabinetBuild complete
+0.969: Num Ticks for Cabinet build : 141
+0.984: LoadFileQueues: SetupGetSourceFileLocation for halaacpi.dll failed: 0xe0000102
+1.000: Num Ticks for Backup : 31
+1.016: Num Ticks for creating uninst inf : 16
+1.016: Registering Uninstall Program for -> KB885836, KB885836 , 0x0
+1.016: LoadFileQueues: SetupGetSourceFileLocation for halaacpi.dll failed: 0xe0000102
+4.469: System Restore Point set.
+4.859: PFE2: Not avoiding Per File Exceptions.
+5.859: GetCatVersion:  Failed to retrieve version information from C:\WINDOWS\system32\CatRoot\{F750E6C3-38EE-11D1-85E5-00C04FC295EE}\KB885836.cat with error 0x57
+5.891: ProcessSetupContentSection: PROCESS_SETUP_CONTENT_OP_INSTALL: Copied d:\46033834c9e041b544bf80ef7fabb5\update\update_SP2QFE.inf -> c:\windows\$hf_mig$\KB885836\update\update_SP2QFE.inf.
+5.891: ProcessSetupContentSection: PROCESS_SETUP_CONTENT_OP_INSTALL: Copied d:\46033834c9e041b544bf80ef7fabb5\spuninst.exe -> c:\windows\$hf_mig$\KB885836\spuninst.exe.
+5.891: ProcessSetupContentSection: PROCESS_SETUP_CONTENT_OP_INSTALL: Copied d:\46033834c9e041b544bf80ef7fabb5\spmsg.dll -> c:\windows\$hf_mig$\KB885836\spmsg.dll.
+5.922: ProcessSetupContentSection: PROCESS_SETUP_CONTENT_OP_INSTALL: Copied d:\46033834c9e041b544bf80ef7fabb5\update\spcustom.dll -> c:\windows\$hf_mig$\KB885836\update\spcustom.dll.
+5.984: ProcessSetupContentSection: PROCESS_SETUP_CONTENT_OP_INSTALL: Copied d:\46033834c9e041b544bf80ef7fabb5\update\KB885836.CAT -> c:\windows\$hf_mig$\KB885836\update\KB885836.CAT.
+6.000: ProcessSetupContentSection: PROCESS_SETUP_CONTENT_OP_INSTALL: Copied d:\46033834c9e041b544bf80ef7fabb5\update\update.exe -> c:\windows\$hf_mig$\KB885836\update\update.exe.
+6.000: ProcessSetupContentSection: PROCESS_SETUP_CONTENT_OP_INSTALL: Copied d:\46033834c9e041b544bf80ef7fabb5\update\update.ver -> c:\windows\$hf_mig$\KB885836\update\update.ver.
+6.000: ProcessSetupContentSection: PROCESS_SETUP_CONTENT_OP_INSTALL: Copied d:\46033834c9e041b544bf80ef7fabb5\update\updatebr.inf -> c:\windows\$hf_mig$\KB885836\update\updatebr.inf.
+6.016: ProcessSetupContentSection: PROCESS_SETUP_CONTENT_OP_INSTALL: Copied d:\46033834c9e041b544bf80ef7fabb5\update\eula.txt -> c:\windows\$hf_mig$\KB885836\update\eula.txt.
+6.031: ProcessSetupContentSection: PROCESS_SETUP_CONTENT_OP_INSTALL: Copied d:\46033834c9e041b544bf80ef7fabb5\update\branches.inf -> c:\windows\$hf_mig$\KB885836\update\branches.inf.
+6.625: Copied file:  C:\Program Files\windows nt\accessories\mswrd6.wpc
+6.734: Copied file:  c:\windows\$hf_mig$\KB885836\SP2QFE\mswrd6.wpc
+6.828: Num Ticks for Copying files : 5812
+6.828: Num Ticks for Reg update and deleting 0 size files : 0	
+6.906: ---- Old Information In The Registry ------
+6.906: Source:C:\WINDOWS\system32\SET1B.tmp (5.1.2600.2603)
+6.906: Destination:C:\WINDOWS\system32\msgina.dll (5.1.2600.2180)
+6.906: Source:C:\WINDOWS\system32\DllCache\SET1C.tmp (5.1.2600.2603)
+6.906: Destination:C:\WINDOWS\system32\DllCache\msgina.dll (5.1.2600.2180)
+6.906: Source:C:\WINDOWS\system32\SET1F.tmp (5.1.2600.2505)
+6.906: Destination:C:\WINDOWS\system32\winlogon.exe (5.1.2600.2180)
+6.906: Source:C:\WINDOWS\system32\SET32.tmp (6.0.2900.2801)
+6.906: Destination:C:\WINDOWS\system32\themeui.dll (6.0.2900.2180)
+6.906: Source:C:\WINDOWS\system32\SET3C.tmp (6.0.2900.2823)
+6.906: Destination:C:\WINDOWS\system32\wininet.dll (6.0.2900.2180)
+6.922: Source:C:\WINDOWS\system32\SET3D.tmp (6.0.2900.2823)
+6.922: Destination:C:\WINDOWS\system32\urlmon.dll (6.0.2900.2180)
+6.922: Source:C:\WINDOWS\system32\SET3E.tmp (6.0.2900.2823)
+6.922: Destination:C:\WINDOWS\system32\shlwapi.dll (6.0.2900.2180)
+6.953: Source:C:\WINDOWS\system32\SET3F.tmp (6.0.2900.2823)
+6.953: Destination:C:\WINDOWS\system32\shdocvw.dll (6.0.2900.2180)
+6.953: Source:C:\WINDOWS\system32\SET44.tmp (6.0.2900.2838)
+6.953: Destination:C:\WINDOWS\system32\mshtml.dll (6.0.2900.2180)
+6.953: Source:C:\WINDOWS\system32\SET4A.tmp (6.0.2900.2823)
+6.953: Destination:C:\WINDOWS\system32\browseui.dll (6.0.2900.2180)
+6.953: Source:C:\WINDOWS\system32\SET5D.tmp (5.1.2600.2843)
+6.953: Destination:C:\WINDOWS\system32\xpsp3res.dll (5.1.2600.2703)
+6.969: Source:C:\WINDOWS\system32\SET67.tmp (5.1.2600.2780)
+6.969: Destination:C:\WINDOWS\system32\esent.dll (5.1.2600.2180)
+6.969: ---- New Information In The Registry ------
+6.969: Source:C:\WINDOWS\system32\SET1B.tmp (5.1.2600.2603)
+6.969: Destination:C:\WINDOWS\system32\msgina.dll (5.1.2600.2180)
+6.969: Source:C:\WINDOWS\system32\DllCache\SET1C.tmp (5.1.2600.2603)
+6.969: Destination:C:\WINDOWS\system32\DllCache\msgina.dll (5.1.2600.2180)
+6.969: Source:C:\WINDOWS\system32\SET1F.tmp (5.1.2600.2505)
+6.969: Destination:C:\WINDOWS\system32\winlogon.exe (5.1.2600.2180)
+6.969: Source:C:\WINDOWS\system32\SET32.tmp (6.0.2900.2801)
+6.969: Destination:C:\WINDOWS\system32\themeui.dll (6.0.2900.2180)
+6.969: Source:C:\WINDOWS\system32\SET3C.tmp (6.0.2900.2823)
+6.969: Destination:C:\WINDOWS\system32\wininet.dll (6.0.2900.2180)
+6.969: Source:C:\WINDOWS\system32\SET3D.tmp (6.0.2900.2823)
+6.969: Destination:C:\WINDOWS\system32\urlmon.dll (6.0.2900.2180)
+6.969: Source:C:\WINDOWS\system32\SET3E.tmp (6.0.2900.2823)
+6.969: Destination:C:\WINDOWS\system32\shlwapi.dll (6.0.2900.2180)
+6.969: Source:C:\WINDOWS\system32\SET3F.tmp (6.0.2900.2823)
+6.969: Destination:C:\WINDOWS\system32\shdocvw.dll (6.0.2900.2180)
+6.969: Source:C:\WINDOWS\system32\SET44.tmp (6.0.2900.2838)
+6.969: Destination:C:\WINDOWS\system32\mshtml.dll (6.0.2900.2180)
+6.969: Source:C:\WINDOWS\system32\SET4A.tmp (6.0.2900.2823)
+6.969: Destination:C:\WINDOWS\system32\browseui.dll (6.0.2900.2180)
+6.969: Source:C:\WINDOWS\system32\SET5D.tmp (5.1.2600.2843)
+6.969: Destination:C:\WINDOWS\system32\xpsp3res.dll (5.1.2600.2703)
+6.969: Source:C:\WINDOWS\system32\SET67.tmp (5.1.2600.2780)
+6.969: Destination:C:\WINDOWS\system32\esent.dll (5.1.2600.2180)
+7.828: UpdateSpUpdSvcInf: Source [ProcessesToRunAfterReboot] section is empty; nothing to do.
+7.844: RebootNecessary = 0,WizardInput = 1 , DontReboot = 1, ForceRestart = 0

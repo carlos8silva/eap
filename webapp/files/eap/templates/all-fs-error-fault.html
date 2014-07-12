@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Application Error</title>
+<link href="/${app-name}/files/styles.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="fnt-text">
+	<div class="fs-section-error">
+	  <div class="fs-title-error">Application Error</div>
+	  <div>
+	  There was an unexpected error in the application. If this error persists, please contact the support team on extension 
+	  <strong>3655</strong> or <a href="mailto:helpdesk@cubigraf.pt">helpdesk@cubigraf.pt</a>.
+	  #if(has-session)
+	  Please <a href="javascript:history.go(-1)">click here</a> to return to the previous page.</div>
+	  #else
+	  Please <a href="/${app-name}/login">click here</a> to return to the home page.</div>
+	  #endif
+
+	  <p/>
+	  <div class="block-info">Error details: ${error-msg} </div>
+	  #if(throwable)
+	  <p/>
+	  <div class="block-stack-trace">
+		<span style="color:#FF0000">${ex-header}</span>
+		<br/>
+		${stack-trace}
+	  </div>
+	  #endif
+	  </div>
+
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,45 @@
+<div style="height:3px"></div>
+
+<form method="post">
+  <input type="hidden" name="project_id" value="${id}" />
+  <input type="hidden" name="action" value="" />
+</form>
+
+#if(saved-default)
+<div class="block-ok" style="margin-bottom:10px; margin-top:5px; margin-right:5px">
+  <table border="0">
+    <tr>
+	  <td width="25"><img src="files/img/icon-ok.png" /></td>
+	  <td style="vertical-align: middle">Project <strong>${name}</strong> has been set as your default project</td>
+	</tr>
+  </table>
+</div>
+#endif
+
+<table border="0" style="margin-bottom:1px">
+  <tr>
+    <td class="header-button-selected">Risks</td>
+    <td class="header-button pointer">Issues</td>
+    <td class="header-button" id="actions">Actions</td>
+    <td class="header-title" width="100%">${project-name}</td>
+  </tr>
+</table>
+
+<script>
+// Actions menu:
+var menu = new Widgets.Menu({attachTo: DOM.id("actions"), shift: null, width: null, keepVisible: true, event: "onmouseover"});
+menu.addCover({style: "header-button-cover"});
+menu.addOption({text:"Set current project as default", link: "javascript:formSaveDefault()"});
+menu.addOption({text:"Save current query", link: "moot"});
+var option = menu.addOption({text:"Run saved query"});
+menu.addOption({text:"Configure Risks view", link: "moot"});
+menu.addOption({text:"Export risks and issues", link: "moot"});
+option.addOption({text:"My own query 1", link: "moot"});
+option.addOption({text:"My own query 2", link: "moot"});
+
+// Form management:
+function formSaveDefault() {
+	document.forms[0].action.value = "save-default";
+	document.forms[0].submit();
+}
+</script>

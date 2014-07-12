@@ -1,0 +1,18 @@
+
+	<!-- This snippet is used by the Manage Users AF (um-list-users.x) -->
+	<!-- to allow user managers to edit or disable user accounts. -->
+	<form method="post" action="um-edit-user.x">
+	<input type="hidden" name="id" value="">
+	<input type="hidden" name="action" value="">
+	<table cellpadding="0" cellspacing="0" border="0" width="770">
+		<tr>
+		  <td width="270">
+			<input type="button" name="b_add" id="b_add" value="Add account" class="button-plus" style="width:130px" onclick="DOM.goto('um-edit-user.x?do=create')"/>
+		  </td>
+		  <td style="text-align:right" width="500">
+			<input type="button" name="b_disable" id="b_disable" value="Disable" class="button-inactive" />
+			<input type="button" name="b_edit" id="b_edit" value="Edit" class="button-inactive" style="margin-left:10px" />
+		  </td>
+		</tr>
+	</table>
+	</form>

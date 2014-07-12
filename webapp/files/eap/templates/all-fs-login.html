@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>EAP.R1 - Sign In</title>
+<link href="files/styles.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+<!--
+-->
+</style>
+<script language="JavaScript" type="text/javascript" src="files/generics.R1.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/constants.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/eap.R1.js"></script>
+<script language="JavaScript" type="text/javascript">
+function checkUsername(field) {
+	return EAP.checkIdentifier(field);
+}
+
+function setRowHeight() {
+	UI.resizeHeight("mainRow");
+}
+
+function showCurrentTime() {
+	DOM.id("currentTime").innerHTML = EAP.getCurrentTime();
+}
+
+function loadPage() {
+	// Force the login page to be the top page:
+	if(top != window) {
+		top.location = window.location;
+		return;
+	}
+	// Register the login form:
+	var fc = FormManager.registerForm({form: DOM.id("login_form")});
+	fc.registerField({field:DOM.id("username"), name:"Username", mandatory:true, validator:checkUsername, width:140});
+	fc.registerField({field:DOM.id("password"), name:"Password", mandatory:true, width:140});
+	if(DOM.id("username").value == "") {
+		DOM.id("username").focus();
+	}
+	else {
+		DOM.id("password").focus();
+	}
+	setRowHeight();
+	window.onresize = setRowHeight;
+	showCurrentTime();
+	setInterval(showCurrentTime, 60*1000);
+}
+</script>
+</head>
+
+<body class="fnt-text fs-body" onload="loadPage()">
+
+  <table border="0" width="100%" height="100%">
+	<!-- TOP BAR -->
+    <tr>
+	  <td width="100%" class="fs-top-bar">
+		<table border="0" width="100%">
+		  <tr>
+			<td class="fs-top-bar-cell">EAP.R1</td>
+			<td class="fs-top-bar-cell" width="100%" align="right" id="currentTime"></td>
+		  </tr>
+		</table>
+	  </td>
+	</tr>
+	<!-- MAIN SECTION -->
+	<tr>
+	  <td valign="top" align="left" width="100%" id="mainRow">
+		<form id="login_form" action="login" method="post">
+		<input type="hidden" name="action" value="${action}" />
+		<div class="fs-section-main">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr>
+					<td width="430">
+						<table cellpadding="0" cellspacing="0" border="0" width="400">
+						  <tr>
+							<td colspan="3" height="55">
+							  <div class="fs-title">EAP.R1 Login</div>
+							</td>
+						  </tr>
+						  <tr>
+							<td colspan="3" height="60"><span class="${style}">${message}</span></td>
+						  </tr>
+						  <tr>
+							<td width="80" class="grid-label">Username:</td>
+							<td width="150" class="grid-field" style="text-align:right">
+							  <input type="text" name="username" id="username" value="${username}" style="width:140px;" />
+							</td>
+							<td width="170"></td>
+						  </tr>
+						  <tr>
+							<td class="grid-label">Password:</td>
+							<td class="grid-field" style="text-align:right">
+							  <input type="password" name="password" id="password" style="width:140px" />
+							</td>
+							<td></td>
+						  </tr>
+						  <tr>
+							<td colspan="2" style="text-align:right" height="60">
+							  <input name="submit" type="submit" class="button" style="width:90px;" value="go" />
+							</td>
+							<td></td>
+						  </tr>
+						  <tr>
+							<td colspan="2" style="text-align:right">
+							  <a href="moot">I forgot my password!</a>
+							</td>
+							<td></td>
+						  </tr>
+						</table>
+					</td>
+					<td width="500">
+						<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="500" height="333" id="login-slide-show" align="middle">
+							<param name="allowScriptAccess" value="sameDomain" />
+							<param name="movie" value="files/login-slide-show.swf" />
+							<param name="quality" value="high" />
+							<param name="bgcolor" value="#ffffff" />
+							<embed src="files/login-slide-show.swf" quality="high" bgcolor="#ffffff" width="500" height="333" name="login-slide-show" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
+						</object>
+					</td>
+				</tr>
+			</table>
+		</div>
+		</form>
+	  </td>
+	</tr>
+	<!-- BOTTOM BAR -->
+	<tr>
+	  <td width="100%" class="fs-bottom-bar"><td>
+	</tr>
+  </table>
+
+</body>
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>${title}</title>
+<link href="files/styles.css" rel="stylesheet" type="text/css" />
+#if(alt-css)
+<link href="files/${css}" rel="stylesheet" type="text/css" />
+#else
+<link href="files/all-frm-table.css" rel="stylesheet" type="text/css" />
+#endif
+<script language="JavaScript" type="text/javascript" src="files/generics.R1.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/constants.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/eap.R1.js"></script>
+#list(scripts)
+<script language="JavaScript" type="text/javascript" src="files/${path}"></script>
+#endlist
+<script>
+// Load:
+function loadPage() {
+	var menu = null;
+<!-- #list(menus) -->
+	// ${title}:
+	menu = new Widgets.Menu({attachTo: DOM.id("column_${i}"), 
+	<!-- #if(shift) -->
+	shift: {top: 1, left: -1},
+	<!-- #endif -->
+	});
+
+	<!-- #if(sort-asc) -->
+	menu.addOption({text:"Sort ascending", link: "${function}.x?action=add-sorting&field=${col-name}&order=asc&tab=${tab}${params}", icon: "files/img/icon-tbl-menu-asc.png"});
+	<!-- #endif -->
+	<!-- #if(sort-desc) -->
+	menu.addOption({text:"Sort descending", link: "${function}.x?action=add-sorting&field=${col-name}&order=desc&tab=${tab}${params}", icon: "files/img/icon-tbl-menu-desc.png"});
+	<!-- #endif -->
+	<!-- #if(sort-rem) -->
+	menu.addOption({text:"Remove sorting", link: "${function}.x?action=remove-sorting&field=${col-name}&tab=${tab}${params}", icon: "files/img/icon-tbl-menu-remove.png"});
+	<!-- #endif -->
+
+	<!-- #if(filter) -->
+	menu.addOption({text:"Change filter", link: showFilter, linkArgs: {field: "${col-name}", formType: "${form-type}"}, icon: "files/img/icon-tbl-menu-filter.png"});
+	menu.addOption({text:"Remove filter", link: "${function}.x?action=remove-filter&field=${col-name}&tab=${tab}${params}", icon: "files/img/icon-tbl-menu-remove.png"});
+	<!-- #else -->
+	menu.addOption({text:"Filter", link: showFilter, linkArgs: {field: "${col-name}", formType: "${form-type}"}, icon: "files/img/icon-tbl-menu-filter.png"});
+	<!-- #endif -->
+<!-- #endlist -->
+
+	// Fix for Safari to prevent it from displaying a partially blank page:
+	if(System.browser.safari) {
+		document.getElementsByTagName("html")[0].style.height = "100%";
+	}
+}
+
+function showFilter(option, args) {
+	var filter = DOM.id("filter_"+args.field);
+	var pos = DOM.getPosition(option.getMenu().wgNode);
+	filter.style.top = (pos.y)+"px";
+	filter.style.left = (pos.x)+"px";
+	UI.show(filter);
+	if(args.formType == "text") {
+		DOM.id("filter_"+args.field+"_expr").focus();
+	}
+	else if(args.formType == "range") {
+		DOM.id("filter_"+args.field+"_start").focus();
+	}
+}
+
+var pageSelectMouseOver = false;
+var pageSelectIntervalID = false;
+
+function showPageSelect(elem) {
+	UI.hideAll();
+	var selectPage = DOM.id("select-page");
+	var pageCover = DOM.id("page-cover");
+	DOM.cover({toCover: elem, cover: pageCover, paddingLeft: 7, paddingTop: 7});
+	UI.show(pageCover);
+	UI.show(selectPage);
+	// Positioning must be coded after selectPage is made visible:
+	selectPage.style.left = pageCover.style.left;
+	selectPage.style.top = (pageCover.offsetTop - selectPage.offsetHeight)+"px";
+	pageSelectMouseOver = true;
+	pageSelectIntervalID = setInterval("hidePageSelect()", 1000);
+}
+
+function hidePageSelect() {
+	if(pageSelectMouseOver) {
+		return;
+	}
+	UI.hideAll();
+	clearInterval(pageSelectIntervalID);
+	pageSelectIntervalID = false;
+}
+
+function highlight(td) {
+	td.style.backgroundColor = "white";
+	td.style.color = "black";
+	pageSelectMouseOver = true;
+}
+
+function deHighlight(td) {
+	td.style.backgroundColor = "";
+	td.style.color = "white";
+	pageSelectMouseOver = false;
+}
+
+var table = {
+
+	_target: "${target}",
+	_lastSelected: null,
+	_multipleSelection: false,
+
+	_onRowOver: function(node) {
+		if(node.eap == null) {
+			node.eap = new Object();
+			node.eap.selected = false;
+		}
+		if(!node.eap.selected) {
+			#if(color-green)
+			node.style.backgroundColor = Constants.UI.COLOR_GREEN;
+			#else
+			node.style.backgroundColor = Constants.UI.COLOR_BLUE;
+			#endif
+		}
+	},
+	
+	_onRowOut: function(node) {
+		if(!node.eap.selected) {
+			node.style.backgroundColor = Constants.UI.COLOR_WHITE;
+		}
+	},
+	
+	_onRowClick: function(node, id, obj) {
+		if(this._target != "") {
+			DOM.goto(this._target+id);
+		}
+		else {
+			if(node.eap.selected) {
+				if(this._multipleSelection) {
+					node.style.backgroundColor = Constants.UI.COLOR_GREEN;
+					node.eap.selected = false;
+				}
+			}
+			else {
+				node.style.backgroundColor = Constants.UI.COLOR_BLUE;
+				if(!this._multipleSelection) {
+					if(this._lastSelected != null) {
+						this._lastSelected.eap.selected = false;
+						this._lastSelected.style.backgroundColor = Constants.UI.COLOR_WHITE;
+					}
+				}
+				this._lastSelected = node;
+				node.eap.selected = true;
+			}
+			this.onFocus(id, obj);
+		}
+	},
+	
+	onFocus: function(id, obj) {
+		// noop;
+	},
+	
+	onDoubleClick: function(id, obj) {
+		// noop;
+	}
+};
+
+var objArray = new Array();
+
+function getObj(i) {
+	if(i >= objArray.length) {
+		return null;
+	}
+	return objArray[i];
+}
+
+#if(create-js-objects)
+// Create objects to hold data:
+var dataObj = null;
+#list(js-objects)
+dataObj = new Object();
+#list(js-columns)
+dataObj["${column}"] = "${value}";
+#endlist
+objArray.push(dataObj);
+#endlist
+#endif
+
+#snippet(snp-js)
+</script>
+</head>
+
+<body class="fnt-text bg" onload="loadPage()">
+
+	<!-- #if(has-title) -->
+	<div class="frm-section-title">${title} </div>
+	<!-- #endif -->
+
+	<!-- #snippet(snp-header) -->
+
+	<!-- #if(has-tabs) -->
+	<table border="0">
+	  <tr>
+		<!-- #list(tabs) -->
+		  <!-- #if(selected) -->
+		  <td class="tbl-tab-selected" width="${width}">${title}</td>
+		  <!-- #else -->
+		  <td class="tbl-tab" width="${width}" onclick="DOM.goto('${function}.x?tab=${tab}')">${title}</td>
+		  <!-- #endif -->
+		<!-- #endlist -->
+		<td class="tbl-tab-space" width="${width}"></td>
+	  </tr>
+	</table>
+	<!-- #endif -->
+
+	<!-- Note: table.width attribute must be included otherwise Chrome expands the table -->	
+	<table border="0" width="${table-width}">
+	  <tr>
+		<!-- #list(columns) -->
+		<!-- #if(first) -->
+		<td class="tbl-title tbl-title-border-first pointer" id="column_${i}" width="${width-1}">
+		<!-- #else -->
+		  <!-- #if(last) -->
+		  <td class="tbl-title tbl-title-border-last pointer" id="column_${i}" width="${width-1}">
+		  <!-- #else -->
+		  <td class="tbl-title tbl-title-border pointer" id="column_${i}" width="${width-1}">
+		  <!-- #endif -->
+		<!-- #endif -->
+		  <table border="0">
+		    <tr>
+			  <td width="${width-2}">${name}</td>
+			  <!-- #if(icon) -->
+			  <td width="10"><img src="files/img/${icon}" /></td>
+			  <!-- #else -->
+			  <td width="16">
+			    <table>
+				  <tr>
+				    <td width="16" class="sorted">${order}</td>
+				  </tr>
+				</table>
+			  </td>
+			  <!-- #endif -->
+			</tr>
+		  </table>
+		</td>
+		<!-- #endlist -->
+	  </tr>
+	  <!-- #list(data) -->
+	  <tr class="tbl-column" onmouseover="table._onRowOver(this)" onmouseout="table._onRowOut(this)" onclick="table._onRowClick(this, '${id}', getObj(${i}))" ondblclick="table.onDoubleClick('${id}', getObj(${i}))">
+	    <!-- #list(attributes) -->
+		  <!-- #if(first) -->
+		  <td class="tbl-cell tbl-cell-border-first">
+		    <div class="word-wrap">
+			#if(bold)
+		      <strong>${value}</strong>
+			#else
+		      ${value}
+			#endif
+		    </div>
+		  </td>
+		  <!-- #else -->
+		    <!-- #if(last) -->
+		    <td class="tbl-cell tbl-cell-border-last">
+			  <div class="word-wrap">
+			  #if(bold)
+		        <strong>${value}</strong>
+			  #else
+		        ${value}
+			  #endif
+			  </div>
+			</td>
+		    <!-- #else -->
+		    <td class="tbl-cell tbl-cell-border">
+			  <div class="word-wrap">
+			  #if(bold)
+		        <strong>${value}</strong>
+			  #else
+		        ${value}
+			  #endif
+			  </div>
+			</td>
+		    <!-- #endif -->
+		  <!-- #endif -->
+		<!-- #endlist -->
+	  </tr>
+	  <!-- #endlist -->
+	  <!-- #if(show-last-row) -->
+	  <tr class="tbl-last-row">
+	    <!-- #list(last-row) -->
+		  <!-- #if(first) -->
+	      <td class="tbl-cell tbl-cell-border-first" height="10"></td>
+		  <!-- #else -->
+		    <!-- #if(last) -->
+	        <td class="tbl-cell tbl-cell-border-last"></td>
+		    <!-- #else -->
+	        <td class="tbl-cell tbl-cell-border"></td>
+		    <!-- #endif -->
+		  <!-- #endif -->
+		<!-- #endlist -->
+	  </tr>
+	  <!-- #endif -->
+	</table>
+
+	<table border="0" class="tbl-page-bar">
+	  <tr>
+		<!-- #if(has-previous) -->
+		<td width="80">
+			<table border="0" onmouseover="this.style.cursor='pointer'" onclick="document.location='${function}.x?page=${page}'">
+			  <tr>
+			    <td width="10" valign="bottom"><img src="files/img/icon-previous.png" style="position:relative;top:2px" /></td>
+			    <td width="70" align="left"><strong>Previous ${items-per-page}</strong></td>
+			  </tr>
+			</table>
+		</td>
+		<!-- #else -->
+	    <td width="80">&nbsp;</td>
+		<!-- #endif -->
+
+		<!-- #if(no-results) -->
+		<td width="${results-width}" align="center"><strong>No results found for your search.</strong></td>
+		<!-- #else -->
+			<!-- #if(one-page) -->
+			<td width="${results-width}" align="center"><strong>Showing page 1 of 1 (${items} items)</strong></td>
+			<!-- #else -->
+			<td width="${results-width}" align="center"><strong>Showing <span class="fnt-link" onmouseover="showPageSelect(this)">page ${page}</span> of ${num-pages} (${items} items)</strong></td>
+			<!-- #endif -->
+		<!-- #endif -->
+		
+		<!-- #if(has-next) -->
+		<td width="80">
+			<table border="0" onmouseover="this.style.cursor='pointer'" onclick="document.location='${function}.x?page=${page}'">
+			  <tr>
+			    <td width="70" align="right"><strong>Next ${items-per-page}</strong></td>
+			    <td width="10" valign="middle" align="right"><img src="files/img/icon-next.png" style="position:relative;top:2px" /></td>
+			  </tr>
+			</table>
+		</td>
+		<!-- #else -->
+	    <td width="80">&nbsp;</td>
+		<!-- #endif -->
+	  </tr>
+	</table>
+
+	<div class="tbl-separator" style="width:${table-width}px"></div>
+
+	<!-- #snippet(snp-footer) -->
+
+	<div class="frm-bottom"></div>
+	
+	<!-- #list(forms) -->
+	<div class="form-layer" style="width:130px" id="filter_${col-name}">
+	  <form action="${function}.x" method="get">
+	  <input type="hidden" name="action" value="add-filter" />
+	  <input type="hidden" name="field" value="${col-name}" />
+	  <input type="hidden" name="tab" value="${tab}" />
+	    <!--  #list(params) -->
+	    <input type="hidden" name="${name}" value="${value}" />
+	    <!--  #endlist -->
+	  <!-- #if(expr) -->
+	  <div style="padding-bottom:5px">Enter a search expression:</div>
+	  <div style="text-align:right; padding-bottom:7px"><input type="text" name="expr" id="filter_${col-name}_expr" value="${filter}" style="width:125px; border:none;" /></div>
+      <div style="padding-bottom:5px">
+	    <table border="0"><tr><td width="25"><input type="checkbox" name="blanks" value="(blanks)" ${checked} style="border:none" /></td><td style="padding-top:2px">Include blanks</td></tr></table>
+	  </div>
+	  <!-- #else -->
+	  	<!-- #if(range) -->
+	    <div style="padding-bottom:5px">Show values between:</div>
+	    <div style="text-align:right; padding-bottom:7px"><input type="text" name="start" id="filter_${col-name}_start" value="${start}" style="width:125px; border:none;" /></div>
+	    <div style="padding-bottom:5px">and:</div>
+	    <div style="text-align:right; padding-bottom:7px"><input type="text" name="end" id="filter_${col-name}_end" value="${end}" style="width:125px; border:none;" /></div>
+        <div style="padding-bottom:5px">
+	      <table border="0"><tr><td width="25"><input type="checkbox" name="blanks" value="(blanks)" ${checked} style="border:none" /></td><td style="padding-top:2px">Include blanks</td></tr></table>
+	    </div>
+	    <!-- #else -->
+	    <div style="padding-bottom:5px">Select values below:</div>
+	      <!-- #list(values) -->
+	      <div style="padding-bottom:5px">
+	        <table border="0"><tr><td width="25"><input type="checkbox" name="lov" value="${value}" ${checked} style="border:none" /></td><td style="padding-top:2px">${value}</td></tr></table>
+	      </div>
+	      <!-- #endlist -->
+	    <!-- #endif -->
+	  <!-- #endif -->
+	  <div style="text-align:right"><input type="submit" class="form-button" value="ok" /></div>
+	  </form>
+	</div>
+	<!-- #endlist -->
+
+	<div class="form-layer fnt-text" id="page-cover" onmouseover="pageSelectMouseOver=true" onmouseout="pageSelectMouseOver=false">
+		<strong>page ${page}</strong>
+	</div>
+
+	<div class="form-layer" id="select-page" onmouseover="pageSelectMouseOver=true" onmouseout="pageSelectMouseOver=false">
+		<div style="padding-bottom: 5px; padding-left: 3px"><strong>Select page:</strong></div>
+		<table style="border-spacing: 3px">
+		<!-- #list(page-select) -->
+		  <tr>
+			<!-- #list(page-select-pages) -->
+			<!-- #if(allow-select) -->
+		    <td width="16" class="page-selector" onmouseover="highlight(this)" onmouseout="deHighlight(this)" onclick="document.location='${function}.x?page=${page}&tab=${tab}'">${page}</td>
+			<!-- #else -->
+		    <td width="16" class="page-selector-disabled">${page}</td>
+			<!-- #endif -->
+			<!-- #endlist -->
+		  </tr>
+		<!-- #endlist -->
+		</table>
+	</div>
+
+</body>
+</html>

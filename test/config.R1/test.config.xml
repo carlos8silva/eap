@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config version="1.0">
+	<globals>
+		<property name="tab-size">4</property>
+		<property name="run-mode">dev</property>
+		<property name="locale">pt_PT</property>
+		<property name="logger">
+			<level>error</level>
+			<location>[env('eap_cubigraf_home')]/04.Logs</location>
+			<filename>cubigraf_&lt;date&gt;.csv</filename>
+			<num-days>15</num-days>
+		</property>
+	</globals>
+	<eap>
+		<central>
+			<property name="authenticator-name">authenticator</property>
+			<property name="error-handler-name">error-handler</property>
+			<property name="send-error-codes">true</property>
+			<property name="session-mode">normal</property>
+			<property name="allow-multiple-sessions">false</property>
+			<property name="keep-sessions-on-reload">false</property>
+			<property name="save-errors-in-database">true</property>
+			<property name="show-stack-trace">true</property>
+		</central>
+		<local>
+			<property name="session-check-daemon-period">5m</property>
+			<property name="notification-check-daemon-period">20m</property>
+			<property name="notification-keep-time">1h</property>
+		</local>
+	</eap>
+	<cubigraf>
+		<shared>
+			<property name="database-connection">
+				<driver>mysql</driver>
+				<server>dbserver01</server>
+				<port>3301</port>
+				<database>cubigraf</database>
+				<username>root</username>
+				<password>8lM-56$iIlJh_002rT</password>
+			</property>
+			<bl>
+				<local>
+					<property name="cache-enabled">true</property>
+					<property name="cache-policies">
+						<entry key="Servicos">limited(10000)</entry>
+						<entry key="Facturas">limited(5000)</entry>
+						<entry key="Clientes">full</entry>
+						<entry key="Users">full</entry>
+						<entry key="Events">limited(10000)</entry>
+						<entry key="Permissions">full</entry>
+					</property>
+					<property name="number-of-lock-attempts-after-failure">2</property>
+					<property name="number-of-lock-attempts-before-release">3</property>
+					<property name="sleep-time-before-lock-retry">1s</property>
+					<property name="sleep-time-after-lock-release">1s</property>
+					<property name="disable-cache-daemon-delay">2s</property>
+					<property name="logger">
+						<level>info</level>
+						<file>[eap_get_app_root()]/03.Logs/[eap_get_app_name()]_BL_[date('yyyyMMdd')].csv</file>
+						<num-days>1</num-days>
+					</property>
+				</local>
+				<central>
+					<property name="use-prepared-statements">false</property>
+				</central>
+			</bl>
+		</shared>
+		<backups>
+			<property name="task-manager">5</property>
+		</backups>
+	</cubigraf>
+</config>

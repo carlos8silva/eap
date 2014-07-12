@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Delete Role</title>
+<link href="files/styles.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" media="all" href="files/external/jquery.jscrollpane.css" />
+<style type="text/css">
+<!--
+.text-description {
+	width: 500px;
+	height: 70px;
+}
+.small-title {
+	font-weight: bold;
+	padding-bottom: 7px;
+}
+.cell-title {
+	font-weight: bold;
+	border-bottom: 1px solid #666666;
+	padding-bottom: 3px;
+}
+.cell {
+	padding-top: 5px;
+	padding-bottom: 5px;
+	vertical-align: middle;
+}
+-->
+</style>
+<script language="JavaScript" type="text/javascript" src="files/generics.R1.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/constants.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/eap.R1.js"></script>
+<script>
+// List of users with corresponding roles:
+var users = new Array();
+#list(js-users)
+users.push({userId: ${user-id}, primaryRoleId: 0});
+#endlist
+
+function onOptionSelect(option) {
+	var optionId = option.id;
+	var userId = null;
+	if(Strings.startsWith(optionId, "assigned")) {
+		optionId = Strings.replace(optionId, "assigned", "available");
+		userId = Strings.replace(option.id, "assigned_", "");
+	}
+	else {
+		optionId = Strings.replace(optionId, "available", "assigned");
+		userId = parseInt(Strings.replace(option.id, "available_", ""), 10);
+	}
+	if(option.value == 0) {
+		// Re-enable both options:
+		var node = DOM.id(optionId);
+		if(node != null) {
+			node.disabled = false;
+		}
+		DOM.id("primary_"+userId).innerHTML = "${name}";
+		DOM.id("row_"+userId).style.backgroundColor = Constants.UI.COLOR_WHITE;
+	}
+	else {
+		// Disable the other option:
+		var node = DOM.id(optionId);
+		if(node != null) {
+			node.disabled = true;
+		}
+		DOM.id("primary_"+userId).innerHTML = "<strong>"+option[option.selectedIndex].text+"</strong>";
+		DOM.id("row_"+userId).style.backgroundColor = Constants.UI.COLOR_GREEN;
+	}
+	// Update user's primary role with selection:
+	for(var i=0; i<users.length; i++) {
+		if(users[i].userId == userId) {
+			users[i].primaryRoleId = option.value;
+			break;
+		}
+	}
+	// Change the button's value to "Next":
+	var foundPending = false;
+	for(var i=0; i<users.length; i++) {
+		if(users[i].primaryRoleId == 0) {
+			foundPending = true;
+			break;
+		}
+	}
+	if(!foundPending) {
+		DOM.id("b_save").value = "Next";
+	}
+}
+
+function checkForm() {
+	var conflicts = "";
+	for(var i=0; i<users.length; i++) {
+		conflicts += users[i].userId+"|"+users[i].primaryRoleId;
+		if(i < users.length-1) {
+			conflicts += ",";
+		}
+	}
+	document.forms[0].conflicts.value = conflicts;
+	return null;
+}
+
+function loadPage() {
+	FormManager.registerForm({form: document.forms[0], button: {id: "b_save", showProgress: true}, validator: checkForm});
+}
+</script>
+</head>
+
+<body class="fnt-text" onload="loadPage()">
+
+	<div class="frm-section-title">Delete Role </div>
+
+	<form method="post">
+	<input type="hidden" name="id" value="${role-id}" />
+	<input type="hidden" name="action" value="delete" />
+	<input type="hidden" name="conflicts" />
+
+	<div class="frm-section-main">
+	  <table>
+		<tr>
+		  <td class="grid-subtitle" width="750">Resolve primary role conflicts</td>
+		</tr>
+		<tr>
+		  <td class="grid-label">
+		  <div class="block-warn">
+		    <table>
+		      <tr>
+			    <td width="25"><img src="files/img/icon-warn.png" /></td>
+			    <td style="vertical-align: middle">
+				There are ${num-users} users who have the <strong>${name}</strong> role assigned as their primary role. Before deleting this role,
+				you must select a new primary role for all the affected users.
+				</td>
+			  </tr>
+		    </table>
+		  </div>
+		  </td>
+		</tr>
+	  </table>
+	  <table>
+	    <tr>
+		  <td class="cell-title" width="190">User</td>
+		  <td class="cell-title" width="190">Primary Role</td>
+		  <td class="cell-title" width="190">Assigned Roles</td>
+		  <td class="cell-title" width="180">Available Roles</td>
+		</tr>
+	    <tr>
+		  <td colspan="3"><div class="separator"></div></td>
+	    </tr>
+		<!-- #list(users) -->
+	    <tr id="row_${user-id}">
+		  <td class="cell">${full-name}</td>
+		  <td class="cell" id="primary_${user-id}">${role-name}</td>
+		  <td class="cell">
+			  <!-- #if(has-assigned-roles) -->
+		      <select id="assigned_${user-id}" onchange="onOptionSelect(this)" style="width:180px">
+		        <option value="0">Choose...</option>
+				<!-- #list(assigned-roles) -->
+		        <option value="${role-id}">${role-name}</option>
+				<!-- #endlist -->
+              </select>
+			  <!-- #else -->
+			  None
+			  <!-- #endif -->
+		  </td>
+		  <td class="cell">
+		      <select id="available_${user-id}" onchange="onOptionSelect(this)" style="width:180px">
+		        <option value="0">Choose...</option>
+				<!-- #list(available-roles) -->
+		        <option value="${role-id}">${role-name}</option>
+				<!-- #endlist -->
+              </select>
+		  </td>
+		</tr>
+		<!-- #endlist -->
+		<tr>
+		  <td class="grid-label" colspan="2">&nbsp; </td>
+		</tr>
+	  </table>
+	</div>
+	<!-- BUTTONS -->
+	<table>
+	  <tr>
+	    <td width="400">
+		  <input type="button" name="b_back" id="b_back" value="Back" class="button-normal" onclick="window.history.go(-1);" />
+		</td>
+		<td width="370" align="right">
+		  <input type="submit" name="b_save" id="b_save" value="Save" class="button-normal" />
+		</td>
+	  </tr>
+	</table>
+	</form>
+
+	<div class="frm-bottom"></div>
+
+</body>
+</html>

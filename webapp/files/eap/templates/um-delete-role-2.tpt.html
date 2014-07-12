@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Delete Role</title>
+<link href="files/styles.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript" type="text/javascript" src="files/generics.R1.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/constants.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/eap.R1.js"></script>
+<script>
+function loadPage() {
+}
+</script>
+</head>
+
+<body class="fnt-text" onload="loadPage()">
+
+	<div class="frm-section-title">Delete Role </div>
+
+	<form method="post">
+	<input type="hidden" name="id" value="${role-id}" />
+	<input type="hidden" name="action" value="delete" />
+	<input type="hidden" name="conflicts" value="none" />
+
+	<div class="frm-section-main">
+	  <table>
+		<tr>
+		  <td class="grid-subtitle" width="750">Review impact to users</td>
+		</tr>
+		<tr>
+		  <td class="grid-label">
+		  <!-- #if(has-logged-in-users) -->
+		  <div class="block-warn">
+		    <table>
+		      <tr>
+			    <td width="25"><img src="files/img/icon-warn.png" /></td>
+			    <td style="vertical-align: middle">
+				There are ${num-users} users currently logged into the application that have the <strong>${role-name}</strong> role assigned to them.
+				Before deleting this role, please remember that all of these users will be logged out.
+				</td>
+			  </tr>
+		    </table>
+		  </div>
+		  <!-- #else -->
+		  <div class="block-ok">
+		    <table>
+		      <tr>
+			    <td width="25"><img src="files/img/icon-ok.png" /></td>
+			    <td style="vertical-align: middle">
+				None of the users with the <strong>${role-name}</strong> role assigned to them are currently logged in.
+				You can proceed with deleting this role without impacting any user.
+				</td>
+			  </tr>
+		    </table>
+		  </div>
+		  <!-- #endif -->
+		  </td>
+		</tr>
+	    <tr>
+		  <td class="grid-label">Please click on the Delete button below to delete the <strong>${role-name}</strong> role.</td>
+		</tr>
+		<tr>
+		  <td class="grid-label" colspan="2">&nbsp; </td>
+		</tr>
+	  </table>
+	</div>
+
+	<!-- BUTTONS -->
+	<table>
+	  <tr>
+	    <td width="400">
+		  <input type="button" name="b_back" id="b_back" value="Back" class="button-normal" onclick="window.history.go(-1);" />
+		</td>
+		<td width="370" align="right">
+		  <input type="submit" name="b_delete" id="b_delete" value="Delete" class="button-danger" />
+		</td>
+	  </tr>
+	</table>
+
+	</form>
+
+	<div class="frm-bottom"></div>
+
+</body>
+</html>

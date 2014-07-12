@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>TITLE</title>
+<link href="files/styles.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript" type="text/javascript" src="files/generics.R1.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/constants.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/eap.R1.js"></script>
+<script>
+// Check the entered number:
+function checkNumber(field) {
+	if(!Validator.isNumber(field.value)) {
+		return "What kind of number is that?";
+	}
+	return null;
+}
+// Load:
+function loadPage() {
+	var fm = FormManager.registerForm({form: document.forms[0], button: {id: "b_save", showProgress: true}});
+	fm.registerField({field: DOM.id("number"), name: "Number", mandatory: true, validator: checkNumber,
+		layer: {left: 402, width: 150},
+		info: "Enter a number. Any number. It does not matter whether it is big or small, it just has to be a number"
+	});
+	DOM.id("number").focus();
+}
+</script>
+</head>
+
+<body class="fnt-text" onload="loadPage()">
+
+	<div class="frm-section-title">Example Form </div>
+
+	<form method="post">
+	<input type="hidden" name="action" value="form" />
+	<div class="frm-section-main">
+		<table cellpadding="0" cellspacing="0" border="0">
+		  <tr>
+			<td class="grid-subtitle" colspan="2">The Number</td>
+		  </tr>
+		  <tr>
+			<td class="grid-label" width="140">Give me a number:</td>
+			<td class="grid-label" width="610"><input type="text" name="number" id="number" class="text-small" /></td>
+		  </tr>
+		  <!-- Add another row to provide the appropriate spacing between the end of the form and the buttons -->
+		  <tr>
+			<td class="grid-label" colspan="2">&nbsp; </td>
+		  </tr>
+		</table>
+	</div>
+	<!-- BUTTONS -->
+	<table>
+	  <tr>
+	    <td width="400">
+		  <input type="button" name="b_back" id="b_back" value="Back" class="button-normal" onclick="window.history.go(-1);" />
+		</td>
+		<td width="370" align="right">
+		  <input type="submit" name="b_save" id="b_save" value="Save" class="button-normal" />
+		</td>
+	  </tr>
+	</table>
+	</form>
+
+	<div class="frm-bottom"></div>
+
+</body>
+</html>

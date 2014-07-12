@@ -1,0 +1,86 @@
+<project name="applications" default="deploy-eap" basedir=".">
+
+	<description>Applications</description>
+
+	<!-- global properties -->
+	<property name="tomcat-home" location="C:/02.Local/EAP/05.Deploy/Tomcat5" />
+	<property name="destination" location="${tomcat-home}/webapps/rit/" />
+	<property name="eap-base" location="C:\02.Local\EAP\03.Build\SVN\svn-trunk" />
+	<property name="eap-src" location="${eap-base}/src" />
+	<property name="eap-build" location="${eap-base}/bin" />
+	<property name="eap-webapp" location="${eap-base}/webapp" />
+	<property name="eap-lib" location="${eap-base}/lib"/>
+
+	<!-- EAP class dir -->
+	<fileset dir="${eap-build}" id="eap-classes">
+		<include name="com/netx/**"/>
+		<exclude name="com/netx/ut/**"/>
+		<exclude name="com/netx/st/**"/>
+	</fileset>
+
+	<!-- EAP web files -->
+	<fileset dir="${eap-webapp}/files" id="eap-html">
+		<include name="**"/>
+	</fileset>
+
+	<!-- External jars -->
+	<fileset dir="${eap-lib}" id="libraries">
+		<include name="mysql-connector-java-5.1.13-bin.jar"/>
+		<include name="dom4j-1.6.1.jar"/>
+		<include name="commons-collections-3.1.jar"/>
+		<include name="commons-pool-1.2.jar"/>
+		<include name="commons-dbcp-1.2.1.jar"/>
+		<include name="poi-3.0.1-FINAL-20070705.jar"/>
+		<include name="poi-contrib-3.0.1-FINAL-20070705.jar"/>
+		<!--
+		<include name="jai_codec.jar"/>
+		<include name="jai_core.jar"/>
+		<include name="mlibwrapper_jai.jar"/>
+		<include name="jaxen-1.1-beta-4.jar"/>
+		<include name="jcifs-1.1.9.jar"/>
+		<include name="oreilly.jar"/>
+		-->
+	</fileset>
+	<path id="project.class.path">
+		<fileset dir="${eap-lib}" />
+	</path>
+
+	<!-- Compilation tasks -->
+	<target name="compile-eap">
+		<javac srcdir="${eap-src}" destdir="${eap-build}" deprecation="off">
+			<classpath refid="project.class.path" />
+		</javac>
+	</target>
+
+	<!-- Tomcat task definitions -->
+	<taskdef name="start" classname="org.apache.catalina.ant.StartTask">
+		<classpath>
+			<path location="${tomcat-home}/server/lib/catalina-ant.jar"/>
+		</classpath> 
+	</taskdef>
+	<taskdef name="stop" classname="org.apache.catalina.ant.StopTask">
+		<classpath>
+			<path location="${tomcat-home}/server/lib/catalina-ant.jar"/> 
+		</classpath>
+	</taskdef>
+
+	<!-- Deployment -->
+	<target name="deploy-eap" depends="compile-eap">
+		<copy todir="${destination}/WEB-INF/classes">
+			<fileset refid="eap-classes"/>
+		</copy>
+		<copy todir="${destination}/WEB-INF/lib">
+			<fileset refid="libraries"/>
+		</copy>
+		<copy todir="${destination}/files">
+			<fileset refid="eap-html"/>
+		</copy>
+		<copy file="${eap-webapp}/web.xml" todir="${destination}/WEB-INF" />
+		<delete file="${destination}/WEB-INF/classes/L10n-store.xls" />
+		<copy file="${eap-src}/L10n-store.xls" todir="${destination}/WEB-INF/classes" />
+		<copy file="${eap-src}/config.properties" todir="${destination}/WEB-INF/classes" />
+		<stop url="http://localhost:8080/manager" username="admin" password="eagle" path="/rit" />
+		<start url="http://localhost:8080/manager" username="admin" password="eagle" path="/rit" />
+	</target>
+
+</project>

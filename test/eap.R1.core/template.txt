@@ -1,0 +1,27 @@
+line 1 with a variable: ${var}
+#list(a-list)
+line 2 is part of a list of items; this is item number ${i}!
+#last
+and item ${i} is the last item
+#endlist
+line 3
+#if(an-if)
+line 4 only appears if the if is true
+#else
+otherwise, you see this thing instead: ${thing}
+#endif
+let's now see a list within a list:
+#list(people)
+person {
+    name: ${name}
+    #if(male)
+    gender: male
+    #else
+    gender: female
+    #endif
+    #list(children)
+    child: ${child-name}
+    #endlist
+}
+#endlist
+end of the file

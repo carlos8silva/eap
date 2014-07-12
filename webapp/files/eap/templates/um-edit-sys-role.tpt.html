@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Edit Role</title>
+<link href="files/styles.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.small-title {
+	font-weight: bold;
+	padding-bottom: 7px;
+}
+.text-description {
+	width: 500px;
+	height: 70px;
+}
+-->
+</style>
+<script language="JavaScript" type="text/javascript" src="files/generics.R1.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/constants.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/eap.R1.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/um-actions.js"></script>
+<script>
+var LEFT_SHIFT = 275;
+
+function loadPage() {
+#list(perm-descs)
+	new Widgets.Overlay({
+		attachTo: DOM.id("perm-${i}"), title: "${perm-name}", content: "${perm-desc}", width: 180,
+		shift: {left: 0, top: (System.browser.ie ? -12 : 0)}
+	});
+#endlist
+
+	// Form elements:
+	var fc = FormManager.registerForm({form: document.forms[0], button: {id: "b_save", showProgress: true}});
+	fc.registerField({field: DOM.id("name"), name: "Role name", mandatory: true, validator: checkRoleName,
+		layer: {left: LEFT_SHIFT, width: 453},
+		info: "Please enter the role's name. No numeric or punctuation characters are allowed"
+	});
+	fc.registerField({field: DOM.id("description"), name: "Description", mandatory: true, validator: null, 
+		layer: {left: 625, width: 107},
+		info: "Please enter a description for this role"
+	});
+	fc.registerField({field: DOM.id("base_ui"), name: "User Interface", mandatory: false, validator: null, 
+		layer: {left: 320, width: 410},
+		info: "Select the User Interface that will be shown to users with this role upon signing in"
+	});
+
+	// Focus on role name:
+	document.forms[0].name.focus();
+}
+</script>
+</head>
+
+<body class="fnt-text" onload="loadPage()">
+
+	<div class="frm-section-title">${title} Role </div>
+
+	<form method="post">
+	<input type="hidden" name="id" value="${role-id}" />
+	<input type="hidden" name="action" value="${action}" />
+
+	<div class="frm-section-main">
+	  <table cellpadding="0" cellspacing="0" border="0" width="750">
+		<tr>
+		  <td colspan="2">
+		  <div class="block-error">
+		    <table cellpadding="0" cellspacing="0" border="0">
+		      <tr>
+			    <td width="25"><img src="files/img/icon-error.png" /></td>
+			    <td style="vertical-align: middle">This is a system role; modifications are restricted to name and description.</td>
+			  </tr>
+		    </table>
+		  </div>
+		  </td>
+		</tr>
+		<tr>
+		  <td class="grid-subtitle" colspan="2">Role Information</td>
+		</tr>
+		<tr>
+		  <td class="grid-label" width="90">Role name<span class="fnt-mandatory">*</span>:</td>
+		  <td class="grid-field" width="640"><input type="text" class="text-small" name="name" id="name" value="${name}" /></td>
+		</tr>
+		<tr>
+		  <td class="grid-label">Description<span class="fnt-mandatory">*</span>:</td>
+		  <td class="grid-field"><textarea class="text-description" name="description" id="description">
+		  ${description}</textarea></td>
+		</tr>
+		  <tr>
+			<td class="grid-label">User Interface:</td>
+			<td class="grid-label"><strong>${ui}</strong></td>
+		  </tr>
+	  </table>
+	</div>
+
+	<div class="frm-section-main">
+	  <table cellpadding="0" cellspacing="0" border="0" width="750">
+		<tr>
+		  <td class="grid-subtitle" colspan="2">Permissions</td>
+		</tr>
+		<tr>
+		  <td class="grid-label" width="90">Permissions: </td>
+		  <td class="grid-label" width="640">
+		    <!-- #list(perms) -->
+		    <span id="perm-${i}"><strong>${perm-name}</strong></span>,
+		    <!-- #last -->
+		    <span id="perm-${i}"><strong>${perm-name}</strong></span>
+		    <!-- #endlist -->
+		  </td>
+		</tr>
+		  <tr>
+			<td class="grid-label" colspan="2">&nbsp; </td>
+		  </tr>
+	  </table>
+	</div>
+
+	<!-- BUTTONS -->
+	<table>
+	  <tr>
+	    <td width="400">
+		  <input type="button" name="b_back" id="b_back" value="Back" class="button-normal" onclick="window.history.go(-1);" />
+		</td>
+		<td width="370" align="right">
+		  <input type="submit" name="b_save" id="b_save" value="Save" class="button-normal" />
+		</td>
+	  </tr>
+	</table>
+
+	</form>
+
+	<div class="frm-bottom"></div>
+
+</body>
+</html>

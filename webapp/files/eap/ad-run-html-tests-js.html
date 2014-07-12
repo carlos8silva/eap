@@ -1,0 +1,281 @@
+<html>
+<head>
+<title>Unit Test - Generics.R1</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link href="files/styles.css" rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="files/generics.R1.js"></script>
+<script>
+function onOptionSelect(option) {
+	DOM.id("option-is-selected").innerHTML = Option.isSelected(option);
+	DOM.id("option-selected-index").innerHTML = Option.selectedIndex(option);
+	DOM.id("option-selected-value").innerHTML = option.value;
+}
+function onRadioSelect(radio) {
+	DOM.id("radio-is-selected").innerHTML = Radio.isSelected(document.form1.radiobutton1);
+	DOM.id("radio-selected-index").innerHTML = Radio.selectedIndex(document.form1.radiobutton1);
+	DOM.id("radio-selected-value").innerHTML = Radio.selectedValue(document.form1.radiobutton1);
+}
+function onStandaloneSelect() {
+	DOM.id("radio-standalone").innerHTML = "clicked";
+}
+
+function loadDocument() {
+	// noop;
+}
+</script>
+</head>
+
+<body class="fnt-text" onload="loadDocument()">
+<script>
+UnitTest.printTitle("Logger:");
+Logger.info("an info message");
+Logger.warn("a warning message");
+Logger.error("an error message");
+try {
+	throw "a real error";
+}
+catch(error) {
+	Logger.error(error);
+}
+for(var i in Logger.buffer) {
+	UnitTest.println(Logger.buffer[i]);
+}
+
+UnitTest.printTitle("Strings");
+var str1 = "aString";
+var str2 = new String;
+UnitTest.assert("Strings.isString('')", "true");
+UnitTest.assert("Strings.isString(Strings)", "false");
+UnitTest.assert("Strings.isString(str1)", "true");
+UnitTest.assert("Strings.isString(str2)", "true");
+UnitTest.assert("Strings.isString(window)", "false");
+UnitTest.assert("Strings.isEmpty('')", "true");
+UnitTest.assert("Strings.isEmpty('\\n \\t ')", "false");
+UnitTest.assert("Strings.isEmpty('a')", "false");
+UnitTest.assert("Strings.isEmpty(null)", "true");
+UnitTest.assert("Strings.isEmpty(undefined)", "true");
+UnitTest.assert("Strings.removeLeading('\\nbaa', '\\n')", "baa", true);
+UnitTest.assert("Strings.removeLeading('aaa', 'a')", "", true);
+UnitTest.assert("Strings.removeLeading('bbb', 'a')", "bbb", true);
+UnitTest.assert("Strings.removeLeading('abc', 'ab')", "c", true);
+UnitTest.assert("Strings.removeLeading('abbc', 'ab')", "bc", true);
+UnitTest.assert("Strings.removeTrailing('baa_ff', 'f')", "baa_", true);
+UnitTest.assert("Strings.removeTrailing('aaa', 'a')", "", true);
+UnitTest.assert("Strings.removeTrailing('abc', 'bc')", "a", true);
+UnitTest.assert("Strings.removeTrailing('abbc', 'bc')", "ab", true);
+UnitTest.assert("Strings.removeTrailing('2px', 'px')", "2", true);
+UnitTest.assert("Strings.remove('ff_aa_ff', 'ff')", "_aa_", true);
+UnitTest.assert("Strings.replace('ABCABC', 'C', 'A')", "ABAABA", true);
+UnitTest.assert("Strings.replace('ABCABC', 'ABC', 'mnbsd')", "mnbsdmnbsd", true);
+UnitTest.assert("Strings.trim(' \\n\\b \\tABC \\t\\n ')", "ABC", true);
+UnitTest.assert("Strings.trim(' \\n\\b \\t\\t\\n ')", "", true);
+UnitTest.assert("Strings.toInteger('0')", "0");
+UnitTest.assert("Strings.toInteger('008')", "8");
+UnitTest.assert("Strings.valueOf(8, 5)", "00008"); 
+UnitTest.assert("Strings.valueOf(10)", "10");
+UnitTest.assert("Strings.valueOf(8.0, 5, 2)", "00008.00"); 
+UnitTest.assert("Strings.valueOf(8, 5, 2)", "00008.00"); 
+UnitTest.assert("Strings.valueOf(8.55, 2, 3)", "08.550");
+UnitTest.assert("Strings.valueOf(8.55, 5, 1)", "00008.6");
+UnitTest.assert("Strings.valueOf(122.7)", "122.7");
+UnitTest.assert("Strings.valueOf(122.7, 5)", "00122.7");
+UnitTest.assert("Strings.valueOf(122.7, 2, 7)", "122.7000000");
+UnitTest.assert("Strings.countWords('Carlos')", "1");
+UnitTest.assert("Strings.countWords('Carlos da Silva Pereira')", "4");
+UnitTest.assert("Strings.countWords('  abc    a')", "2");
+UnitTest.assert("Strings.startsWith('SomewhereNice', 'Somewhere')", "true");
+UnitTest.assert("Strings.startsWith('SomewhereNice', 'Somewher')", "true");
+UnitTest.assert("Strings.startsWith('SomewhereNice', 'Somewhera')", "false");
+UnitTest.assert("Strings.startsWith('SomewhereNice', 'Nice')", "false");
+UnitTest.assert("Strings.startsWith('Somewhere', 'SomewhereNice')", "false");
+UnitTest.assert("Strings.endsWith('SomewhereNice', 'eNice')", "true");
+UnitTest.assert("Strings.endsWith('SomewhereNice', 'Somewhere')", "false");
+UnitTest.assert("Strings.endsWith('SomewhereNice', 'aNice')", "false");
+
+UnitTest.printTitle("Dates");
+UnitTest.assert("Dates.getYear(new Date())", new Date().getFullYear());
+UnitTest.assert("Dates.isLeap(2004)", "true");
+UnitTest.assert("Dates.isLeap(2008)", "true");
+UnitTest.assert("Dates.isLeap(2009)", "false");
+UnitTest.eval("Dates.toString(new Date())");
+UnitTest.assert("Dates.valueOf('2004 jul 4')", "Sun Jul 4 00:00:00 CST 2004");
+UnitTest.assert("Dates.valueOf('2004/3/4')", "Thu Mar 4 00:00:00 CST 2004");
+UnitTest.assert("Dates.valueOf('2004-03-4')", "Thu Mar 4 00:00:00 CST 2004");
+UnitTest.assert("Dates.valueOf('2004-03-32')", "false");
+UnitTest.assert("Dates.valueOf('2004-2-29')", "Sun Feb 29 00:00:00 CST 2004");
+UnitTest.assert("Dates.valueOf('2005-2-29')", "false");
+UnitTest.assert("Dates.equals(new Date(), new Date())", "true");
+UnitTest.assert("Dates.equals(Dates.valueOf('2004 jul 4'), new Date())", "false");
+UnitTest.eval("Dates.formatTime()");
+UnitTest.assert("Dates.formatTime(Dates.valueOf('2004 jul 4'))", "00:00");
+
+UnitTest.printTitle("Char");
+UnitTest.assert("Char.isLetter('c')", "true");
+UnitTest.assert("Char.isLetter('ç')", "true");
+UnitTest.assert("Char.isLetter('Â')", "true");
+UnitTest.assert("Char.isLetter('ñ')", "true");
+UnitTest.assert("Char.isLetter(':')", "false");
+UnitTest.assert("Char.isLetter('8')", "false");
+UnitTest.assert("Char.isLetter('_')", "false");
+UnitTest.assert("Char.isLetter('$')", "false");
+UnitTest.assert("Char.isDigit('c')", "false");
+UnitTest.assert("Char.isDigit('9')", "true");
+UnitTest.assert("Char.isDigit('/')", "false");
+UnitTest.assert("Char.isAlphaNumeric('c')", "true");
+UnitTest.assert("Char.isAlphaNumeric('á')", "true");
+UnitTest.assert("Char.isAlphaNumeric('9')", "true");
+UnitTest.assert("Char.isAlphaNumeric('#')", "false");
+
+UnitTest.printTitle("Arrays");
+var array = new Array();
+array.push("a");
+array.push("b");
+array.push("c");
+UnitTest.assert("Arrays.flatten({array: array, separator: ','})", "a,b,c");
+UnitTest.assert("Arrays.flatten({array: array, separator: '|'})", "a|b|c");
+UnitTest.assert("Arrays.last(array)", "c");
+
+UnitTest.printTitle("Validator");
+UnitTest.assert("Validator.isEmpty('')", "true");
+UnitTest.assert("Validator.isEmpty(false)", "true");
+UnitTest.assert("Validator.isEmpty('\\n \\n\\t')", "true");
+UnitTest.assert("Validator.isNumber(10)", "true");
+UnitTest.assert("Validator.isNumber(344.77)", "true");
+UnitTest.assert("Validator.isNumber('ww')", "false");
+UnitTest.assert("Validator.isInteger('12')", "true");
+UnitTest.assert("Validator.isInteger('12.5')", "false");
+UnitTest.assert("Validator.isEmail('khepera@portugalmail.pt')", "true");
+UnitTest.assert("Validator.isEmail('y@po.ru')", "true");
+UnitTest.assert("Validator.isEmail('y@po.r')", "false");
+UnitTest.assert("Validator.isEmail('y@poru')", "false");
+UnitTest.assert("Validator.isEmail('@po.ru')", "false");
+UnitTest.assert("Validator.isEmail('y@po@ru.u')", "false");
+UnitTest.assert("Validator.isTime('1:33')", "true");
+UnitTest.assert("Validator.isTime('90:33')", "false");
+UnitTest.assert("Validator.isTime('00:06')", "true");
+UnitTest.assert("Validator.isTime('00:60')", "false");
+UnitTest.assert("Validator.isTime('00:59:59')", "true");
+UnitTest.assert("Validator.isTime('24:59:59')", "false");
+UnitTest.assert("Validator.isTime('00:59:60')", "false");
+UnitTest.assert("Validator.isDate('2004 jan 45')", "false");
+UnitTest.assert("Validator.isDate('30 dez 1910')", "true");
+UnitTest.assert("Validator.isDate('30/8/2000')", "true");
+UnitTest.assert("Validator.isDate('29/2/2003')", "false");
+UnitTest.assert("Validator.isDate('2004-FEV-29')", "true");
+UnitTest.assert("Validator.isAlphabetic('8')", "false");
+UnitTest.assert("Validator.isAlphabetic('Carlos')", "true");
+UnitTest.assert("Validator.isAlphabetic('Carlos8')", "false");
+UnitTest.assert("Validator.isAlphabetic('Gonçalves')", "true");
+
+UnitTest.printTitle("Radio buttons:");
+</script>
+<form name="form1">
+<table border="1" cellspacing="0" cellpadding="3">
+  <tr class="fnt-text">
+    <td width="22" align="left">
+	  <input name="radiobutton1" type="radio" value="V1" onclick="onRadioSelect()"></td>
+    <td width="80">Value 1 </td>
+    <td width="100">isSelected</td>
+    <td width="60" class="fnt-text" id="radio-is-selected">N/A</td>
+  </tr>
+  <tr class="fnt-text">
+    <td align="left">
+	  <input name="radiobutton1" type="radio" value="V2" onclick="onRadioSelect()"></td>
+    <td>Value 2 </td>
+    <td>selectedIndex</td>
+    <td class="fnt-text" id="radio-selected-index">N/A</td>
+  </tr>
+  <tr class="fnt-text">
+    <td align="left">
+	  <input name="radiobutton1" type="radio" value="V3" onclick="onRadioSelect()"></td>
+    <td>Value 3 </td>
+    <td>selectedValue</td>
+    <td class="fnt-text" id="radio-selected-value">N/A</td>
+  </tr>
+  <tr class="fnt-text">
+    <td align="left">
+	  <input name="radiobutton2" type="radio" value="V4" onclick="onStandaloneSelect()"></td>
+    <td>Standalone </td>
+    <td>click me</td>
+    <td class="fnt-text" id="radio-standalone">N/A</td>
+  </tr>
+</table>
+<script>
+UnitTest.nl();
+UnitTest.assert("Radio.isRadioArray(document.form1.radiobutton1)", "true");
+UnitTest.assert("Radio.isRadioArray(document.form1.radiobutton2)", "false");
+UnitTest.assert("Radio.isRadioButton(document.form1.radiobutton2)", "true");
+UnitTest.assert("Radio.isRadioButton(document.form1.radiobutton1[0])", "true");
+UnitTest.nl();
+
+UnitTest.printTitle("Option list:");
+UnitTest.nl();
+</script>
+<table border="1" cellspacing="0" cellpadding="3">
+  <tr class="fnt-text">
+    <td width="110">
+	<select name="oList" onchange="onOptionSelect(this)">
+      <option value="0">choose...</option>
+      <option value="V1">Value 1</option>
+      <option value="V2">Value 2</option>
+      <option value="V3">Value 3</option>
+    </select></td>
+    <td width="100" class="fnt-text">isSelected</td>
+    <td width="60" class="fnt-text" id="option-is-selected">N/A</td>
+  </tr>
+  <tr class="fnt-text">
+    <td>&nbsp;</td>
+    <td>selectedIndex</td>
+    <td class="fnt-text" id="option-selected-index">N/A</td>
+  </tr>
+  <tr class="fnt-text">
+    <td>&nbsp;</td>
+    <td>selectedValue</td>
+    <td class="fnt-text" id="option-selected-value">N/A</td>
+  </tr>
+</table>
+</form>
+<script>
+UnitTest.assert("Option.isOption(document.form1.oList)", "true");
+UnitTest.nl();
+
+UnitTest.printTitle("System:");
+UnitTest.eval("navigator.appVersion");
+UnitTest.eval("System.base.name");
+UnitTest.eval("System.base.version");
+UnitTest.eval("System.base.majorVersion");
+UnitTest.eval("System.base.minorVersion");
+UnitTest.eval("System.browser.ie");
+UnitTest.eval("System.browser.safari");
+UnitTest.eval("System.browser.chrome");
+UnitTest.eval("System.browser.ns");
+UnitTest.eval("System.browser.name");
+UnitTest.eval("System.browser.version");
+UnitTest.eval("System.browser.majorVersion");
+UnitTest.eval("System.browser.minorVersion");
+UnitTest.eval("System.browser.language");
+UnitTest.eval("System.browser.cookiesEnabled()");
+UnitTest.eval("System.browser.javaOn()");
+UnitTest.eval("System.os.windows");
+UnitTest.eval("System.os.mac");
+UnitTest.eval("System.os.name");
+UnitTest.eval("System.os.version");
+UnitTest.eval("System.device.pc");
+UnitTest.eval("System.device.iPhone");
+UnitTest.eval("System.device.iPad");
+
+UnitTest.printTitle("DOM:");
+</script>
+<a href="javascript:DOM.getWindow('win1', 'files/about.html').open();">Open a regular window</a><br>
+<a href="javascript:DOM.getPopup('win2', 'files/about.html').setSize(300, 200).open();">Open a popup window</a><br>
+<a href="javascript:DOM.getPopup('win3', 'files/about.html').setBounds(20, 20, 300, 200).setScrollbars(true).open();">Open a popup window with a scrolling bar</a><br>
+
+</body>
+</html>
+
+
+
+
+
+
+

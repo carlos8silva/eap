@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+	<display-name>Risks and Issues Tracker</display-name>
+	<description/>
+
+	<session-config>
+		<session-timeout>0</session-timeout>
+	</session-config>
+
+	<welcome-file-list>
+		<welcome-file>login</welcome-file>
+	</welcome-file-list>
+
+      <!-- EAP -->
+	<servlet>
+		<servlet-name>Initializer</servlet-name>
+		<servlet-class>com.netx.eap.R1.core.SrvInitializer</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>ErrorHandler</servlet-name>
+		<servlet-class>com.netx.eap.R1.core.SrvErrorHandler</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ErrorHandler</servlet-name>
+		<url-pattern>/error-handler</url-pattern>
+	</servlet-mapping>
+
+	<error-page>
+		<exception-type>java.lang.Throwable</exception-type>
+		<location>/error-handler</location>
+	</error-page>
+	<error-page>
+		<error-code>403</error-code>
+		<location>/error-handler</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/error-handler</location>
+	</error-page>
+
+	<servlet>
+		<servlet-name>FileDispatcher</servlet-name>
+		<servlet-class>com.netx.eap.R1.core.SrvFileDispatcher</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>FileDispatcher</servlet-name>
+		<url-pattern>/files/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>FunctionDispatcher</servlet-name>
+		<servlet-class>com.netx.eap.R1.core.SrvFunctionDispatcher</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>FunctionDispatcher</servlet-name>
+		<url-pattern>*.x</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>Login</servlet-name>
+		<servlet-class>com.netx.eap.R1.core.SrvLogin</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Login</servlet-name>
+		<url-pattern>/login</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>Logout</servlet-name>
+		<servlet-class>com.netx.eap.R1.core.SrvLogout</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Logout</servlet-name>
+		<url-pattern>/logout</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ApplicationInfo</servlet-name>
+		<servlet-class>com.netx.eap.R1.core.SrvApplicationInfo</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ApplicationInfo</servlet-name>
+		<url-pattern>/application-info.srv</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>PersonalInfo</servlet-name>
+		<servlet-class>com.netx.eap.R1.core.SrvPersonalInfo</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PersonalInfo</servlet-name>
+		<url-pattern>/personal-info.srv</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>Start</servlet-name>
+		<servlet-class>com.netx.eap.R1.core.SrvStart</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Start</servlet-name>
+		<url-pattern>/start.srv</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>FsConfig</servlet-name>
+		<servlet-class>com.netx.eap.R1.core.SrvFsConfigJs</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>FsConfig</servlet-name>
+		<url-pattern>/fs-config.js</url-pattern>
+	</servlet-mapping>
+
+	<!-- TESTING -->
+	<servlet>
+		<servlet-name>SrvInfoCookies</servlet-name>
+		<servlet-class>com.netx.eap.R1.info.SrvInfoCookies</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SrvInfoCookies</servlet-name>
+		<url-pattern>/info/cookies</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>SrvInfoError</servlet-name>
+		<servlet-class>com.netx.eap.R1.info.SrvInfoError</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SrvInfoError</servlet-name>
+		<url-pattern>/info/error</url-pattern>
+	</servlet-mapping>
+
+</web-app>

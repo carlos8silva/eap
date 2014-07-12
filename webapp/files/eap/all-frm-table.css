@@ -1,0 +1,126 @@
+/* Table styles for EAP */
+body.bg {
+}
+td.tbl-title {
+	text-align: left;
+	background-color: #000000;
+	color: #FFFFFF;
+	padding-left: 7px;
+	padding-right: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+td.tbl-title-border-first {
+	border-right: 1px solid #FFFFFF;
+	border-top: 1px solid #FFFFFF;
+}
+td.tbl-title-border {
+	border-right: 1px solid #FFFFFF;
+	border-top: 1px solid #FFFFFF;
+}
+td.tbl-title-border-last {
+	border-top: 1px solid #FFFFFF;
+}
+td.tbl-title-icon {
+	border: 1px solid #FFFFFF;
+	font-size: 11px;
+	text-align: center;
+}
+tr.tbl-column {
+	background-color: #FFFFFF;
+}
+tr.tbl-column:hover {
+	cursor: pointer;
+}
+tr.tbl-last-row {
+	background-color: #FFFFFF;
+}
+td.tbl-cell {
+	text-align: left;
+	padding-left: 7px;
+	padding-right: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+td.tbl-cell-border-first {
+	border-right: 1px solid #999999;
+}
+td.tbl-cell-border {
+	border-right: 1px solid #999999;
+}
+td.tbl-cell-border-last {
+	border: none;
+}
+td.sorted {
+	border: 1px solid #FFFFFF;
+	text-align: center;
+}
+table.tbl-page-bar {
+	margin: 0px;
+	margin-top: 10px;
+}
+div.tbl-separator {
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 7px;
+	margin-bottom: 10px;
+	border-bottom: 1px solid #999999;
+}
+td.tbl-tab {
+	border-right: 1px solid #FFFFFF;
+	border-top: 1px solid #FFFFFF;
+	text-align: center;
+	background-color: #FFFFFF;
+	color: #000000;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	cursor: pointer;
+}
+td.tbl-tab:hover {
+	background-color: #0089EB;
+	color: #FFFFFF;
+}
+td.tbl-tab-selected {
+	border-right: 1px solid #FFFFFF;
+	border-top: 1px solid #FFFFFF;
+	text-align: center;
+	background-color: #666666;
+	color: #FFFFFF;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+td.tbl-tab-space {
+	background-color: #C8C8C8;
+}
+div.form-layer {
+	color: white;
+	position: absolute;
+	padding: 7px;
+	z-index: 7;
+	border: 1px solid black;
+	background-image:url('img/bg-msg.png');
+	display: none;
+}
+.form-button {
+	width: 25px;
+	height: 18px;
+	border: none;
+	background-color: white;
+	font-weight:bold;
+}
+.page-selector {
+	border: 1px solid white;
+	border-collapse: separate;
+	text-align: center;
+	cursor: pointer;
+}
+.page-selector-disabled {
+	border: 1px solid #666666;
+	color: #666666;
+	border-collapse: separate;
+	text-align: center;
+}

@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>EAP - Admin</title>
+<link href="files/styles.css" rel="stylesheet" type="text/css" />
+<style>
+<!--
+div.nav-menu {
+	background-color: #FFFFFF;
+	text-align: left;
+	border: none;
+	width: 200px;
+	height: 400px;
+	margin: 0px;
+	padding: 0px;
+}
+-->
+</style>
+<script language="JavaScript" type="text/javascript" src="files/generics.R1.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/constants.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/eap.R1.js"></script>
+<script language="JavaScript" type="text/javascript" src="fs-config.js"></script>
+<script>
+function resizeComponents() {
+	UI.resizeHeight("frame-main");
+	UI.resizeHeight("frame-nav");
+}
+
+// TODO move to API
+var helpOption = null;
+function toggleHelp() {
+	if(Config.helpOn) {
+		Config.disableHelp();
+		helpOption.setText("Turn help on");
+	}
+	else {
+		Config.enableHelp();
+		helpOption.setText("Turn help off");
+	}
+}
+
+function bPress(wg) {
+	wg.domNode.style.backgroundColor = "#000000";
+}
+
+function bRelease(wg) {
+	wg.domNode.style.backgroundColor = "#333333";
+}
+
+function loadPage() {
+	resizeComponents();
+	window.onresize = resizeComponents;
+	// Help menu:
+	var helpMenu = new Widgets.Menu({attachTo: DOM.id("b-help"), width: 100, align: "left"});
+	var toggleHelpText = Config.helpOn ? "Turn help off" : "Turn help on";
+	helpOption = helpMenu.addOption({text:toggleHelpText, link:"javascript:toggleHelp();", keepVisible:true});
+	helpMenu.addOption({text:"Help contents", link:"javascript:alert('Not Implemented');"});
+	helpMenu.addOption({text:"About", link:"javascript:alert('Not Implemented');"});
+	// Messages link:
+	DOM.id("b-messages").onclick = function() { UI.openPage("eu-list-messages.x"); };
+	// User menu:
+	var userMenu = new Widgets.Menu({attachTo:DOM.id("b-user"), width:"inherit", align:"right"});
+	userMenu.addOption({text:"Account Settings", link:"javascript:UI.openPage('eu-account-settings.x')"});
+	userMenu.addOption({text:"Sign Out", link:"logout"});
+	// Events:
+	helpMenu.onShow = userMenu.onShow = bPress;
+	helpMenu.onHide = userMenu.onHide = bRelease;	
+}
+</script>
+</head>
+
+<body class="fnt-text fs-body" onload="loadPage()">
+
+  <table border="0" width="100%" height="100%">
+    <!-- TOP BAR -->
+    <tr>
+	  <td colspan="2" width="100%" height="25" class="fs-top-bar">
+	    <table border="0" width="100%">
+		  <tr>
+		    <td class="fs-top-bar-cell pointer" id="b-home" onclick="openPage('home.x')">Home</td>
+		    <td class="fs-top-bar-cell pointer" id="b-help">Help</td>
+		    <td class="fs-top-bar-cell pointer" id="b-messages">Messages&nbsp;(0)</td>
+		    <td width="100%" align="right">
+			  <table border="0" id="b-user">
+		        <tr>
+		          <td class="fs-top-bar-cell pointer" style="padding-right:0px">${screen-name}</td>
+		          <td class="pointer" style="padding-top:5px; padding-bottom: 5px"><img src="files/img/icon-account.png"/></td>
+		        </tr>
+		      </table>
+			</td>
+		  </tr>
+		</table>
+	  </td>
+	</tr>
+	<tr>
+      <!-- NAVIGATION PANE -->
+	  <td valign="top" align="left" width="200">
+        <div class="nav-menu" id="frame-nav">
+			<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="200" height="450" id="start-menu" align="left">
+				<param name="allowScriptAccess" value="sameDomain" />
+				<param name="movie" value="files/start-menu.swf" />
+				<param name="quality" value="high" />
+				<param name="wmode" value="transparent" />
+				<param name="bgcolor" value="#ffffff" />
+				<embed src="files/start-menu.swf" quality="high" wmode="transparent" bgcolor="#ffffff" width="200" height="450" name="start-menu" align="left" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
+			</object>
+		</div>
+	  </td>
+	  <!-- MAIN IFRAME -->
+	  <td align="left" width="100%">
+        <iframe src ="home.x" width="810" height="100" frameborder="0" name="main" scrolling="auto" id="frame-main">
+          <p>Your browser does not support iframes.</p>
+        </iframe>
+	  </td>
+	</tr>
+    <!-- BOTTOM BAR -->
+	<tr>
+	  <td colspan="2" width="100%" class="fs-bottom-bar"></td>
+	</tr>
+  </table>
+
+</body>
+</html>

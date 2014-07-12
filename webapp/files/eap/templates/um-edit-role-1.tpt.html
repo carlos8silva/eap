@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Edit Role</title>
+<link href="files/styles.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" media="all" href="files/external/jquery.jscrollpane.css" />
+<style type="text/css">
+<!--
+.text-description {
+	width: 500px;
+	height: 70px;
+}
+.small-title {
+	font-weight: bold;
+	padding-bottom: 7px;
+}
+-->
+</style>
+<script language="JavaScript" type="text/javascript" src="files/generics.R1.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/constants.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/eap.R1.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/um-actions.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/external/jquery-1.4.2-min.js"></script> 
+<script language="JavaScript" type="text/javascript" src="files/external/jquery.mousewheel.js"></script> 
+<script language="JavaScript" type="text/javascript" src="files/external/jquery.jscrollpane.js"></script>
+<script>
+var pList = new Widgets.SelectList();
+var pAssigned = null;
+var pAvailable = null;
+
+function loadPage() {
+	// Initialize panes:
+	pAssigned = pList.addPane({attachTo: DOM.id("permissions-assigned"), columns: ["Permission", "Description"], selectedColor: Constants.UI.COLOR_RED});
+	pAvailable = pList.addPane({attachTo: DOM.id("permissions-available"), columns: ["Permission", "Description"]});
+	// Assigned permissions:
+	#list(p-assigned)
+	pAssigned.addEntry(new Widgets.Entry("${id}", "${name}", "${description}"));
+	#endlist
+	// Available permissions:
+	#list(p-available)
+	pAvailable.addEntry(new Widgets.Entry("${id}", "${name}", "${description}"));
+	#endlist
+	// Set the content panes:
+	pAssigned.redraw();
+	pAvailable.redraw();
+	
+	// Form elements:
+	var fc = FormManager.registerForm({form:document.forms[0], button:{id:"b_save", showProgress:true}, validator:checkForm});
+	fc.registerField({field:DOM.id("name"), name:"Role name", mandatory:true, validator:checkRoleName,
+		info: "Please enter the role's name. No numeric or punctuation characters are allowed", width:450
+	});
+	fc.registerField({field:DOM.id("description"), name:"Description", mandatory:true, validator:null, 
+		info: "Please enter a description for this role", width:100
+	});
+	fc.registerField({field:DOM.id("base_ui"), name:"User Interface", mandatory:false, validator:null, 
+		info: "Select the User Interface that will be shown to users with this role upon signing in", width: 400
+	});
+	
+	// Button actions:
+	DOM.id("b_add_p").onclick = assignPermissions;
+	DOM.id("b_remove_p").onclick = removePermissions;
+	
+	// Focus on role name:
+	document.forms[0].name.focus();
+}
+
+function assignPermissions() {
+	pAvailable.moveEntries();
+}
+
+function removePermissions() {
+	pAssigned.moveEntries();
+}
+
+function checkForm(form) {
+	var msgs = new Array();
+	// Format permissions in the request:
+	form.permissions.value = Arrays.flatten({array: pAssigned.entries, separator: ",", translator: function(entry) {return entry.id}});
+	// Check permissions:
+	if(pAssigned.entries.length == 0) {
+		msgs.push("Role must have at least one permission");
+	}
+	return msgs;
+}
+</script>
+</head>
+
+<body class="fnt-text" onload="loadPage()">
+
+	<div class="frm-section-title">${title} Role </div>
+
+	<form method="post">
+	<input type="hidden" name="id" value="${role-id}" />
+	<input type="hidden" name="action" value="${action}" />
+	<input type="hidden" name="permissions" />
+
+	<div class="frm-section-main">
+		#if(event-created)
+		<div class="block-ok">
+		  <table cellpadding="0" cellspacing="0" border="0">
+		    <tr>
+			  <td width="25"><img src="files/img/icon-ok.png" /></td>
+			  <td style="vertical-align: middle">Role has been created.</td>
+			</tr>
+		  </table>
+		</div>
+		#endif
+		<table cellpadding="0" cellspacing="0" border="0" width="750">
+		  <tr>
+			<td class="grid-subtitle" colspan="2">Role Information</td>
+		  </tr>
+		  <tr>
+			<td class="grid-label" width="90">Role name<span class="fnt-mandatory">*</span>:</td>
+			<td class="grid-field" width="640"><input type="text" class="text-small" name="name" id="name" value="${name}" /></td>
+		  </tr>
+		  <tr>
+			<td class="grid-label">Description<span class="fnt-mandatory">*</span>:</td>
+			<td class="grid-field"><textarea class="text-description" name="description" id="description">
+			${description}</textarea></td>
+		  </tr>
+		  <tr>
+			<td class="grid-label">User Interface:</td>
+			<td class="grid-field">
+		      <select name="base_ui" id="base_ui" style="width:200px;">
+		        <!--  #list(uinterfaces) -->
+		        <option value="${ui-id}" ${selected}>${ui-name}</option>
+		        <!-- #endlist -->
+              </select>
+			</td>
+		  </tr>
+		</table>
+	</div>
+
+	<div class="frm-section-main">
+	  <table cellpadding="0" cellspacing="0" border="0" width="750">
+		<tr>
+		  <td class="grid-subtitle" colspan="2">Permissions</td>
+		</tr>
+		<tr>
+		  <td class="grid-text" colspan="2">
+			Select permissions that user accounts with this role should be able to access.
+		  </td>
+		</tr>
+		<tr>
+		  <td width="380" class="small-title">Assigned permissions:</td>
+		  <td width="350" class="small-title">Available permissions:</td>
+		</tr>
+		<tr>
+		  <td id="permissions-assigned"></td>
+		  <td id="permissions-available"></td>
+		</tr>
+	  </table>
+	  <table cellpadding="0" cellspacing="0" border="0" width="750">
+		<tr>
+		  <td align="right" width="370"><input type="button" name="b_remove_p" id="b_remove_p" value="Remove" class="button-pright-100" /></td>
+		  <td width="10">&nbsp;</td>
+		  <td align="left" width="370"><input type="button" name="b_add_p" id="b_add_p" value="Add" class="button-pleft" /></td>
+		</tr>
+		  <tr>
+			<td class="grid-label" colspan="2">&nbsp; </td>
+		  </tr>
+	  </table>
+	</div>
+
+	<!-- BUTTONS -->
+	<table>
+	  <tr>
+	    <td width="400">
+		  <input type="button" name="b_back" id="b_back" value="Back" class="button-normal" onclick="window.history.go(-1);" />
+		</td>
+		<td width="290" align="right">
+		  <!-- #if(can-delete) -->
+		  <input type="button" name="b_delete" id="b_delete" value="Delete" class="button-danger" onclick="DOM.goto('um-edit-role.x?id=${role-id}&do=delete')" />
+		  <!-- #endif -->
+		</td>
+		<td width="80" align="right">
+		  <input type="submit" name="b_save" id="b_save" value="Save" class="button-normal" />
+		</td>
+	  </tr>
+	</table>
+	</form>
+
+	<div class="frm-bottom"></div>
+
+</body>
+</html>

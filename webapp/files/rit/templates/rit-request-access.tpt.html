@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Request Access</title>
+<link href="files/styles.css" rel="stylesheet" type="text/css" />
+<link href="files/rit-list.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript" type="text/javascript" src="files/generics.R1.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/constants.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/eap.R1.js"></script>
+<script>
+function loadPage() {
+	#list(menus)
+	var menu_${i} = new Widgets.Menu({attachTo: DOM.id("request_${i}"), keepVisible: true, event: "onmouseover"});
+	menu_${i}.addCover({style:"tbl-cell"});
+	#if(none)
+	  menu_${i}.addOption({text:"Request access", link:"rit-request-access.x?do=create&project_id=${project-id}"});
+	#else
+	  menu_${i}.addOption({text:"View message", link:"rit-request-access.x?do=view&conv_id=${conv-id}"});
+	  #if(pending)
+	    menu_${i}.addOption({text:"Re-send", link:"rit-request-access.x?do=reply&conv_id=${conv-id}&last_message=${last-msg}"});
+	  #endif
+	#endif
+	#endlist
+}
+</script>
+</head>
+
+<body class="fnt-text" onload="loadPage()">
+
+	<div class="frm-section-title">Request Access </div>
+	<div class="frm-section-main">
+		#if(no-access-1)
+		<div class="block-error">
+		  <table border="0">
+			<tr>
+			  <td width="25"><img src="files/img/icon-error.png" /></td>
+			  <td style="vertical-align: middle">You do not have access to any projects. Please request access to a project from the list below.
+			  Alternatively, you can <a href="moot">create your own project</a>...
+			  </td>
+			</tr>
+		  </table>
+		</div>
+		#endif
+		<!-- Titles -->
+		<table cellpadding="0" cellspacing="0" border="0">
+		  <tr>
+			<td class="grid-subtitle">Available Projects</td>
+		  </tr>
+		  <tr>
+			<td class="grid-label">Please select the project you would like to access from the list below. Your request will be sent to the project owner for approval.</td>
+		  </tr>
+		</table>
+		<!-- List of projects -->
+	    <table border="0" width="745">
+		  <tr>
+		    <td class="tbl-title tbl-title-border-first" width="150">Project</td>
+		    <td class="tbl-title tbl-title-border" width="350">Description</td>
+		    <td class="tbl-title tbl-title-border" width="100">Owner</td>
+		    <td class="tbl-title tbl-title-border-last" width="145">Access Request</td>
+		  </tr>
+		  <!--  #list(requests) -->
+		  <tr>
+		    <td class="tbl-cell tbl-cell-border-first"><div class="word-wrap">${project}</div></td>
+		    <td class="tbl-cell tbl-cell-border"><div class="word-wrap">${description}</div></td>
+		    <td class="tbl-cell tbl-cell-border"><div class="word-wrap">${owner}</div></td>
+		    <td class="tbl-cell tbl-cell-border-last" id="request_${i}">${request}</td>
+		  </tr>
+		  <!--  #endlist -->
+		  <tr>
+			<td class="grid-label">&nbsp; </td>
+		  </tr>
+	    </table>
+	</div>
+
+	#if(no-access-2)
+	#else
+	<!-- Back button -->
+	<table>
+	  <tr>
+		<td>
+		  <input type="button" name="b_back" id="b_back" value="Back" class="button-normal" onclick="window.history.go(-1);" />
+		</td>
+	  </tr>
+	</table>
+	#endif
+
+	<div class="frm-bottom"></div>
+
+</body>
+</html>

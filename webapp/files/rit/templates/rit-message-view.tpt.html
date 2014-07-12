@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>View Access Request</title>
+<link href="files/styles.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript" type="text/javascript" src="files/generics.R1.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/constants.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/eap.R1.js"></script>
+<script>
+// Load:
+function loadPage() {
+	var bSend = DOM.id("b_send");
+	var bMenu = new Widgets.ButtonMenu({attachTo: bSend, menuWidth: "inherit"});
+	bMenu.addOption({text:"Mark Unread", link:"rit-request-access.x?do=mark-unread&conv_id=${conv-id}&last_message=${last-msg}"});
+	#if(pending)
+		#if(prj-owner)
+			bMenu.addOption({text:"Reject", link:"rit-request-access.x?do=reject&conv_id=${conv-id}&last_message=${last-msg}"});
+			bMenu.addOption({text:"Reply", link:"rit-request-access.x?do=reply&conv_id=${conv-id}&last_message=${last-msg}"});
+			bMenu.domNode.onclick = function() {
+				DOM.goto("rit-request-access.x?do=accept&conv_id=${conv-id}&last_message=${last-msg}");
+			};
+		#else
+			bMenu.domNode.onclick = function() {
+				DOM.goto("rit-request-access.x?do=reply&conv_id=${conv-id}&last_message=${last-msg}");
+			};
+		#endif
+	#else
+		DOM.id("b_send").onclick = function() {
+			DOM.goto("rit-request-access.x?do=reply&conv_id=${conv-id}&last_message=${last-msg}");
+		};
+	#endif
+}
+</script>
+</head>
+
+<body class="fnt-text" onload="loadPage()">
+
+	<div class="frm-section-title">View Access Request </div>
+
+	<div class="frm-section-msg">
+		<table border="0" >
+		  #if(message-sent)
+		  <tr>
+			<td colspan="2">
+			<div class="block-ok">
+			  <table border="0">
+				<tr>
+				  <td width="25"><img src="files/img/icon-ok.png" /></td>
+				  <td style="vertical-align: middle">Your message has been sent.</td>
+				</tr>
+			  </table>
+			</div>
+			</td>
+		  </tr>
+		  #endif
+		  #if(new-message)
+		  <tr>
+			<td colspan="2">
+			<div class="block-warn">
+			  <table border="0">
+				<tr>
+				  <td width="25"><img src="files/img/icon-warn.png" /></td>
+				  <td style="vertical-align: middle">You have received a new message, please see below.</td>
+				</tr>
+			  </table>
+			</div>
+			</td>
+		  </tr>
+		  #endif
+		  <tr>
+			<td class="grid-label" width="60">Subject:</td>
+			<td class="grid-label" width="690"><strong>${subject}</strong></td>
+		  </tr>
+		</table>
+	</div>
+
+	
+	<table border="0" class="msg-container">
+	  <tr>
+		<td width="160" class="msg-info">
+		<!-- MESSAGE INFO -->
+		<table border="0">
+		  <tr>
+			<td class="grid-msg-info" width="40">From:</td>
+			<td class="grid-msg-info"><strong>${from}</strong></td>
+		  </tr>
+		  <tr>
+			<td class="grid-msg-info">To:</td>
+			<td class="grid-msg-info"><strong>${to}</strong></td>
+		  </tr>
+		  <tr>
+			<td class="grid-msg-info">Sent:</td>
+			<td class="grid-msg-info"><strong>${sent}</strong></td>
+		  </tr>
+		</table>
+		</td>
+		<td width="570" class="msg-text">
+		<!-- MESSAGE TEXT -->
+		<table border="0">
+		  <tr>
+			<td class="grid-msg-info" width="390">${msg}</td>
+			<!-- BUTTONS -->
+			<td align="right" class="grid-msg-first" width="180">
+			  <input type="button" name="b_back" id="b_back" value="Back" class="button-normal" onclick="DOM.goto('eu-list-messages.x');" />
+			  #if(show-accept)
+			  <input type="button" name="b_send" id="b_send" value="Accept" class="button-normal" style="margin-left:5px"/>
+			  #else
+			  <input type="button" name="b_send" id="b_send" value="Reply" class="button-normal" style="margin-left:5px"/>
+			  #endif
+			</td>
+		  </tr>
+		</table>
+		</td>
+	  </tr>
+	</table>
+
+	<!-- #list(messages) -->
+	<table border="0" class="msg-container">
+	  <tr>
+		<td width="160" class="msg-info">
+		<!-- MESSAGE INFO -->
+		<table border="0">
+		  <tr>
+			<td class="grid-msg-info" width="40">From:</td>
+			<td class="grid-msg-info"><strong>${from}</strong></td>
+		  </tr>
+		  <tr>
+			<td class="grid-msg-info">To:</td>
+			<td class="grid-msg-info"><strong>${to}</strong></td>
+		  </tr>
+		  <tr>
+			<td class="grid-msg-info">Sent:</td>
+			<td class="grid-msg-info"><strong>${sent}</strong></td>
+		  </tr>
+		</table>
+		</td>
+		<td width="570" class="msg-text">
+		<!-- MESSAGE TEXT -->
+		<table border="0">
+		  <tr>
+			<td class="grid-msg-info" width="570">${msg}</td>
+		  </tr>
+		</table>
+		</td>
+	  </tr>
+	</table>
+	<!-- #endlist -->
+
+	<div class="frm-bottom"></div>
+
+</body>
+</html>

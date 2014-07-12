@@ -1,0 +1,128 @@
+/* Table styles for RIT */
+body.bg {
+}
+td.tbl-title {
+	text-align: left;
+	background-color: #E3E1DF;
+	color: #000000;
+	padding-left: 7px;
+	padding-right: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+td.tbl-title-border-first {
+	border-right: 1px solid #FFFFFF;
+	border-top: 1px solid #E3E1DF;
+}
+td.tbl-title-border {
+	border-right: 1px solid #FFFFFF;
+	border-top: 1px solid #E3E1DF;
+}
+td.tbl-title-border-last {
+	border-top: 1px solid #E3E1DF;
+}
+td.tbl-title-icon {
+	border: 1px solid #FFFFFF;
+	font-size: 11px;
+	text-align: center;
+}
+tr.tbl-column {
+	background-color: #FFFFFF;
+}
+tr.tbl-column:hover {
+	cursor: pointer;
+}
+tr.tbl-last-row {
+	background-color: #FFFFFF;
+}
+td.tbl-cell {
+	text-align: left;
+	padding-left: 7px;
+	padding-right: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+td.tbl-cell-border-first {
+	border-right: 1px solid #999999;
+}
+td.tbl-cell-border {
+	border-right: 1px solid #999999;
+}
+td.tbl-cell-border-last {
+	border: none;
+}
+td.sorted {
+	border: 1px solid #3C3C3C;
+	text-align: center;
+}
+table.tbl-page-bar {
+	margin: 0px;
+	margin-top: 10px;
+}
+div.tbl-separator {
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 7px;
+	margin-bottom: 10px;
+	border-bottom: 1px solid #999999;
+}
+td.tbl-tab {
+	border: 1px solid #FFFFFF;
+	background-color: #FFFFFF;
+	color: #000000;
+	text-align: center;
+	font-weight: bold;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	cursor: pointer;
+}
+td.tbl-tab:hover {
+	background-color: #EAE9E6;
+	border: 1px solid #FFFFFF;
+	border-bottom: 1px solid #EAE9E6;
+}
+td.tbl-tab-selected {
+	border: 1px solid #FFFFFF;
+	border-bottom: 1px solid #EAE9E6;
+	background-color: #EAE9E6;
+	color: #000000;
+	text-align: center;
+	font-weight: bold;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+td.tbl-tab-space {
+	background-color: #EAE9E6;
+}
+div.form-layer {
+	color: white;
+	position: absolute;
+	padding: 7px;
+	z-index: 7;
+	border: 1px solid black;
+	background-image:url('img/bg-msg.png');
+	display: none;
+}
+.form-button {
+	width: 25px;
+	height: 18px;
+	border: none;
+	background-color: white;
+	font-weight:bold;
+}
+.page-selector {
+	border: 1px solid white;
+	border-collapse: separate;
+	text-align: center;
+	cursor: pointer;
+}
+.page-selector-disabled {
+	border: 1px solid #666666;
+	color: #666666;
+	border-collapse: separate;
+	text-align: center;
+}

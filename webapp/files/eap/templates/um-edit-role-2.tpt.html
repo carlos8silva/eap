@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Edit Role</title>
+<link href="files/styles.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+<!--
+.radio-buttons {
+	border: none;
+}
+-->
+</style>
+<script language="JavaScript" type="text/javascript" src="files/generics.R1.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/constants.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/eap.R1.js"></script>
+<script>
+function loadPage() {
+	var fc = FormManager.registerForm({form: document.forms[0], button: {id: "b_confirm", showProgress: true}, validator: checkForm});
+}
+
+function checkForm(form) {
+	var msgs = new Array();
+	if(!Radio.isSelected(form.confirmation)) {
+		msgs.push("You need to select one option");
+	}
+	return msgs;
+}
+</script>
+</head>
+
+<body class="fnt-text" onload="loadPage()">
+
+	<div class="frm-section-title">Update Role </div>
+
+	<form method="post">
+	<input type="hidden" name="action" value="confirm" />
+
+	<div class="frm-section-main">
+	  <table>
+		<tr>
+		  <td class="grid-subtitle" colspan="2" width="750">Review impact to users</td>
+		</tr>
+		<tr>
+		  <td class="grid-label" colspan="2">
+		  <div class="block-warn">
+		    <table>
+		      <tr>
+			    <td width="25"><img src="files/img/icon-warn.png" /></td>
+			    <td style="vertical-align: middle">
+				You have modified permissions on the <strong>${role-name}</strong> role. These permissions will only be effective once the affected users
+				log out of the application and log back in.
+				</td>
+			  </tr>
+		    </table>
+		  </div>
+		  </td>
+		</tr>
+	    <tr>
+		  <td class="grid-label" colspan="2">
+		    You can either:
+		  </td>
+		</tr>
+	    <tr>
+		  <td class="grid-field" width="20">
+		    <input type="radio" name="confirmation" value="update" class="radio-buttons" />
+		  </td>
+		  <td class="grid-label" width="730">
+		    Confirm modification of this role's permissions, but leave affected users logged in. They will continue to use their old permissions
+			until they log out of the application. Once they log back in, the new permissions will apply
+		  </td>
+		</tr>
+	    <tr>
+		  <td class="grid-field">
+		    <input type="radio" name="confirmation" value="logout" class="radio-buttons" />
+		  </td>
+		  <td class="grid-label">
+		    Force the ${num-users} affected users out of the application
+		  </td>
+		</tr>
+		<tr>
+		  <td class="grid-label" colspan="2">&nbsp; </td>
+		</tr>
+	  </table>
+	</div>
+	<!-- BUTTONS -->
+	<table>
+	  <tr>
+	    <td width="400">
+		  <input type="button" name="b_cancel" id="b_cancel" value="Cancel" class="button-danger" onclick="window.history.go(-1);" />
+		</td>
+		<td width="370" align="right">
+		  <input type="submit" name="b_confirm" id="b_confirm" value="Confirm" class="button-normal" />
+		</td>
+	  </tr>
+	</table>
+	</form>
+
+	<div class="frm-bottom"></div>
+
+</body>
+</html>

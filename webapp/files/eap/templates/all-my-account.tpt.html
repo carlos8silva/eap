@@ -1,0 +1,331 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Account Settings</title>
+<link href="files/styles.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript" type="text/javascript" src="files/generics.R1.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/constants.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/eap.R1.js"></script>
+<script>
+// Change password:
+function checkPassword1(field) {
+	var result = EAP.checkPassword(field);
+	if(result != null) {
+		return result;
+	}
+	if(!Validator.isEmpty(DOM.id("password2").value)) {
+		if(field.value != DOM.id("password2").value) {
+			return Constants.Locale.PASSWORDS_DONT_MATCH;
+		}
+		if(field.value == DOM.id("old_password").value) {
+			return Constants.Locale.NEW_PASSWORD_MUST_BE_DIFFERENT;
+		}
+	}
+	FormManager.id("password2").reset();
+	return null;
+}
+
+function checkPassword2(field) {
+	var result = EAP.checkPassword(field);
+	if(result != null) {
+		return result;
+	}
+	if(!Validator.isEmpty(DOM.id("password1").value)) {
+		if(field.value != DOM.id("password1").value) {
+			return Constants.Locale.PASSWORDS_DONT_MATCH;
+		}
+		if(field.value == DOM.id("old_password").value) {
+			return Constants.Locale.NEW_PASSWORD_MUST_BE_DIFFERENT;
+		}
+	}
+	FormManager.id("password1").reset();
+	return null;
+}
+
+function changePassword() {
+	var request = new AjaxRequest({
+		url: "eu-account-settings.x",
+		method: "post",
+		parameters: Array({name:"action", value:"change-password"}, DOM.id("old_password"), DOM.id("password1")),
+		onSuccess: function(xml) {
+			FormManager.forms[1].showConfirmation("Your password has been changed");
+			FormManager.forms[1].reset();
+		},
+		onFailure: function(errorCode, message) {
+			if(errorCode == "wrong-password") {
+				FormManager.id("old_password").showValidation(false, message);
+			}
+			else if(errorCode == "too-many-tries") {
+				top.history.go();
+			}
+			else {
+				Logger.showStatus = true;
+				Logger.error("unknown error code: "+errorCode);
+			}
+		}
+	});
+	request.send();
+}
+
+// Change security questions:
+function changeSecurityQuestions() {
+	var request = new AjaxRequest({
+		url: "eu-account-settings.x",
+		method: "post",
+		parameters: Array(
+			{name:"action", value:"security-questions"},
+			DOM.id("password_sc"), DOM.id("question1"), DOM.id("answer1"), DOM.id("question2"), DOM.id("answer2")
+		),
+		onSuccess: function(xml) {
+			FormManager.forms[2].showConfirmation("Your security questions have been saved");
+			FormManager.forms[2].reset();
+		},
+		onFailure: function(errorCode, message) {
+			if(errorCode == "wrong-password") {
+				FormManager.id("password_sc").showValidation(false, message);
+			}
+			else if(errorCode == "too-many-tries") {
+				top.history.go();
+			}
+			else {
+				Logger.error("unknown error ["+errorCode+"]: "+message);
+			}
+		}
+	});
+	request.send();
+}
+
+function checkQuestion1(field) {
+	if(!Option.isSelected("question1") || !Option.isSelected(DOM.id("question2"))) {
+		return null;
+	}
+	if(DOM.id("question1").value == DOM.id("question2").value) {
+		return "Please select a different question";
+	}
+	FormManager.id("question2").reset();
+	return null;
+}
+
+function checkQuestion2(field) {
+	if(!Option.isSelected("question1") || !Option.isSelected(DOM.id("question2"))) {
+		return null;
+	}
+	if(DOM.id("question1").value == DOM.id("question2").value) {
+		return "Please select a different question";
+	}
+	FormManager.id("question1").reset();
+	return null;
+}
+
+// Load:
+function loadPage() {
+#list(js-roles)
+	new Widgets.Overlay({
+		attachTo:DOM.id("role-${i}"), title:"${role-name}", content:"${role-desc}", width:180,
+		shift:{left:0, top:(System.browser.ie ? -12 : 0)}
+	});
+#endlist
+#list(js-perms)
+	new Widgets.Overlay({
+		attachTo:DOM.id("perm-${i}"), title:"${perm-name}", content:"${perm-desc}", width:180,
+		shift:{left:0, top:(System.browser.ie ? -12 : 0)}
+	});
+#endlist
+	// Account settings:
+	var fc1 = FormManager.registerForm({form:document.forms[0], button:{id:"b_account_settings", showProgress:true}, showUnsavedChanges:true});
+	fc1.registerField({field:DOM.id("session_expires"), name:"Session expiration", mandatory:false,
+		info:"Choose the amount of time you can leave your browser unattended until the session expires", width:200
+	});
+	// Change password:
+	var fc2 = FormManager.registerForm({form:document.forms[1], button:{id:"b_change_password"}, showUnsavedChanges:true});
+	fc2.registerField({field:DOM.id("old_password"), name:"Password", mandatory:true,
+		info:"Please enter your current password"
+	});
+	fc2.registerField({field:DOM.id("password1"), name:"Password", mandatory:true, validator:checkPassword1,
+		info:"Please enter your new password"
+	});
+	fc2.registerField({field:DOM.id("password2"), name:"Password", mandatory:true, validator:checkPassword2,
+		info:"Please confirm your new password"
+	});
+	// Change security questions:
+	var fc3 = FormManager.registerForm({form:document.forms[2], button:{id:"b_security_questions"}, showUnsavedChanges:true});
+	fc3.registerField({field:DOM.id("question1"), name:"Security question", mandatory:true, validator:checkQuestion1,
+		info:"Please select a security question and provide an answer below"
+	});
+	fc3.registerField({field:DOM.id("answer1"), name:"Answer", mandatory:true});
+	fc3.registerField({field:DOM.id("question2"), name:"Security question", mandatory:true, validator:checkQuestion2,
+		info:"Please select a security question and provide an answer below"
+	});
+	fc3.registerField({field:DOM.id("answer2"), name:"Answer", mandatory:true});
+	fc3.registerField({field:DOM.id("password_sc"), name:"Password", mandatory:true, showCorrected:false,
+		info:"Please enter your current password"
+	});
+}
+</script>
+</head>
+
+<body class="fnt-text" onload="loadPage()">
+
+	<div class="frm-section-title">My Account </div>
+
+	<form method="post">
+	<input type="hidden" name="action" value="account-settings" />
+	<div class="frm-section-main">
+		<table cellpadding="0" cellspacing="0" border="0">
+		  <tr>
+			<td class="grid-subtitle" colspan="2">Account settings</td>
+		  </tr>
+		  <tr>
+			<td class="grid-label" width="102">Username:</td>
+			<td class="grid-label" width="648"><strong>${username}</strong></td>
+		  </tr>
+		  <tr>
+			<td class="grid-label">Name:</td>
+			<td class="grid-label"><strong>${full-name}</strong></td>
+		  </tr>
+		  <tr>
+			<td class="grid-label">Roles:</td>
+			<td class="grid-label">
+				<!-- #list(roles) -->
+				<span id="role-${i}"><strong>${role-name}</strong></span>, 
+				<!-- #last -->
+				<span id="role-${i}"><strong>${role-name}</strong></span>
+				<!-- #endlist -->
+			</td>
+		  </tr>
+		  <!-- #if(has-individual-perms) -->
+		  <tr>
+			<td class="grid-label">Individual permissions: </td>
+			<td class="grid-label">
+				<!-- #list(perms) -->
+				<span id="perm-${i}"><strong>${perm-name}</strong></span>,
+				<!-- #last -->
+				<span id="perm-${i}"><strong>${perm-name}</strong></span>
+				<!-- #endlist -->
+			</td>
+		  </tr>
+		  <!-- #endif -->
+		  <tr>
+		    <td class="grid-label">My session expires after: </td>
+		    <td class="grid-field">
+		      <select name="session_expires" id="session_expires" style="width:156px;">
+		        <option value="10" ${session-expires-10}>10 minutes</option>
+		        <option value="20" ${session-expires-20}>20 minutes</option>
+		        <option value="30" ${session-expires-30}>30 minutes</option>
+		        <option value="60" ${session-expires-60}>1 hour</option>
+		        <option value="120" ${session-expires-120}>2 hours</option>
+		        <option value="0" ${session-expires-0}>Never</option>
+              </select>
+			</td>
+	      </tr>
+		  <tr>
+			<td class="grid-button" colspan="2">
+		      <input type="submit" name="b_account_settings" id="b_account_settings" value="Save" class="button-normal" />
+			</td>
+		  </tr>
+		</table>
+	</div>
+	</form>
+
+	<form action="javascript:changePassword()" method="post">
+	<div class="frm-section-main">
+		<table cellpadding="0" cellspacing="0" border="0">
+		  <tr>
+			<td class="grid-subtitle" colspan="2">Change my password</td>
+		  </tr>
+		  <tr>
+			<td class="grid-label" width="112">Old password:</td>
+			<td class="grid-field" width="638"><input name="old_password" id="old_password" type="password" maxlength="20" class="text-small" /></td>
+		  </tr>
+		  <tr>
+			<td class="grid-label">New password:</td>
+			<td class="grid-field"><input name="password1" id="password1" type="password" maxlength="20" class="text-small" /></td>
+		  </tr>
+		  <tr>
+			<td class="grid-label">Re-type password:</td>
+			<td class="grid-field"><input name="password2" id="password2" type="password" maxlength="20" class="text-small" /></td>
+		  </tr>
+		  <tr>
+			<td class="grid-button" colspan="2">
+		      <input type="submit" name="b_change_password" id="b_change_password" value="Save" class="button-normal" />
+			</td>
+		  </tr>
+		</table>
+	</div>
+	</form>
+	
+	<div class="frm-section-main">
+		<table cellpadding="0" cellspacing="0" border="0">
+		  <tr>
+			<td class="grid-subtitle" colspan="2">Change my security questions</td>
+		  </tr>
+		  <tr>
+			<td colspan="2" width="750">
+				<div class="block-info">
+				To protect your account from unauthorized access, your current security questions and respective answers will not be displayed.
+				If you wish to re-set your security questions, please select your new security questions and answers below.
+				</div>
+			</td>
+		  </tr>
+		</table>
+		<div id="security_questions_2">
+			<form action="javascript:changeSecurityQuestions()" method="post">
+			<table width="750" border="0" cellspacing="0" cellpadding="0">
+			  <tr>
+				<td class="grid-label" width="102">Question 1:</td>
+				<td class="grid-field" width="648">
+					<select name="question1" id="question1" style="width:235px">
+					  <option value="0" selected="selected">Select...</option>
+					  <!-- #list(questions1) -->
+					  <option value="${value}">${question}</option>
+					  <!-- #endlist -->
+					</select>
+				</td>
+			  </tr>
+			  <tr>
+				<td class="grid-label">Answer:</td>
+				<td class="grid-field"><input name="answer1" id="answer1" type="text" maxlength="40" class="text-med" /></td>
+			  </tr>
+			  <tr>
+				<td class="grid-label">Question 2:</td>
+				<td class="grid-field">
+					<select name="question2" id="question2" style="width:235px">
+					  <option value="0" selected="selected">Select...</option>
+					  <!-- #list(questions2) -->
+					  <option value="${value}">${question}</option>
+					  <!-- #endlist -->
+					</select>
+				</td>
+			  </tr>
+			  <tr>
+				<td class="grid-label">Answer:</td>
+				<td class="grid-field" style="padding-bottom:20px"><input name="answer2" id="answer2" type="text" maxlength="40" class="text-med" /></td>
+			  </tr>
+		  <tr>
+			<td colspan="2" width="750">
+				<div class="block-info">
+				Please enter your password below before submitting your new security questions, to ensure that no one else changes them.
+				</div>
+			</td>
+		  </tr>
+			  <tr>
+				<td class="grid-label">Password:</td>
+				<td class="grid-field">
+				  <input type="password" name="password_sc" id="password_sc" maxlength="20" class="text-small" />
+				</td>
+			  </tr>
+			  <tr>
+				<td class="grid-button" colspan="2">
+				  <input type="submit" name="b_security_questions" id="b_security_questions" value="Save" class="button-normal" />
+				</td>
+			  </tr>
+			</table>
+			</form>
+		</div>
+	</div>
+
+	<div class="frm-bottom"></div>
+
+</body>
+</html>

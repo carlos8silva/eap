@@ -1,0 +1,30 @@
+<application-context version="1.0">
+    <property name="root-dir" value="fs://localhost/[C]/Shared/05.Server/01.Applications/Cubigraf" />
+    <property name="environment" value="dev" />
+    <property name="any-object" class="tests.generics.AnyObject">
+        <create>
+            <argument class="java.lang.String" value="ANY" />
+            <argument class="java.lang.Long" value="182736" />
+            <argument class="java.lang.String[]" value="array element one;array element two" />
+    	</create>
+        <property name="property-one" class="long" value="1" />
+        <property name="property-two" class="Long" value="2" />
+        <property name="inner-object" class="Object" />
+    </property>
+    <context name="context1">
+        <property name="abc" value="def" />
+        <property name="session-mode" value="NORMAL" />
+        <property name="any-object" class="tests.generics.AnyObject">
+            <create>
+                <argument class="java.lang.String" value="ANY" />
+                <argument class="java.lang.Long" value="182736" />
+                <argument class="java.lang.String[]">
+                    <create>
+                        <argument value="array element one" />
+                        <argument value="array element two" />
+       	            </create>
+                </argument>
+            </create>
+        </property>
+    </context>
+</application-context>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ded version="1.0">
+
+    <entity name="Customers" type="master-data">
+        <primary-key>
+            <field name="customer_id" type="autonumber" />
+        </primary-key>
+        <field name="name" type="text(50)" />
+        <field name="address" type="text(200)" />
+    </entity>
+   
+    <entity name="Products" type="master-data">
+        <primary-key>
+            <field name="product_id" type="text(10)" />
+        </primary-key>
+        <field name="name" type="text(50)" />
+        <field name="price" type="double" />
+    </entity>
+
+    <entity name="Orders" type="transactional">
+        <primary-key>
+            <field name="order_id" type="autonumber" />
+        </primary-key>
+        <field name="customer_id" type="foreign-key(Customers)" on-delete="restrict" on-update="cascade" />
+        <field name="date_made" type="date" default="now" read-only="true" />
+        <field name="status_id" type="foreign-key(OrderStatus)" default="N" on-delete="restrict" on-update="cascade" />
+        <association name="LineItems" related-entity="Products">
+            <field name="quantity" type="int" />
+        </association>
+        <operations>
+        	<operation name="selectByDates">SELECT * FROM Orders WHERE date_made BETWEEN ? AND ?</operation>
+        </operations>
+    </entity>
+	
+	<entity name="OrderStatus" type="reference-data">
+	    <primary-key>
+            <field name="status_id" type="text(1)" />
+        </primary-key>
+        <field name="description" type="text(20)" />
+        <values>
+            <value status_id="N" description="New" />
+            <value status_id="P" description="Paid" />
+            <value status_id="D" description="Dispatched" />
+            <value status_id="R" description="Received" />
+        </values>
+	</entity>
+	
+    <boolean-values>
+        <base>numeric</base>
+        <true-values>1</true-values>
+        <false-values>0</false-values>
+    </boolean-values>
+
+</ded>

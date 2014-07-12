@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Risks and Issues Tracker</title>
+<link href="files/styles.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+<!--
+td.rit-top-bar {
+	background-color: #CC0000;
+	padding: 0px;
+}
+td.bottom-bar {
+	background-color: #FFFFFF;
+	font-weight: normal;
+	font-size: 12px;
+	text-align: right;
+	padding-right: 12px;
+	padding-top: 1px;
+	padding-bottom: 0px;
+	border-top: 1px solid #999999;
+}
+td.top-bar-cell {
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	font-size: 12px;
+	color: #FFFFFF;
+	padding-bottom: 5px;
+	padding-top: 5px;
+	padding-left: 6px;
+	padding-right: 12px;
+}
+-->
+</style>
+<script language="JavaScript" type="text/javascript" src="files/generics.R1.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/constants.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/eap.R1.js"></script>
+<script language="JavaScript" type="text/javascript" src="fs-config.js"></script>
+<script>
+function resizeComponents() {
+	UI.resizeHeight("frame-main");
+	UI.resizeWidth("frame-main");
+}
+
+var helpOption = null;
+function toggleHelp() {
+	if(Config.helpOn) {
+		Config.disableHelp();
+		helpOption.setText("Turn help on");
+	}
+	else {
+		Config.enableHelp();
+		helpOption.setText("Turn help off");
+	}
+}
+
+function bPress(wg) {
+	wg.domNode.style.backgroundColor = "#A00000";
+}
+
+function bRelease(wg) {
+	wg.domNode.style.backgroundColor = "#CC0000";
+}
+
+function loadPage() {
+	resizeComponents();
+	window.onresize = resizeComponents;
+	// Projects menu:
+	var projectsMenu = new Widgets.Menu({attachTo: DOM.id("b-projects"), align: "left"});
+	// #if(has-projects-1)
+	// #list(projects)
+	projectsMenu.addOption({text:"${name}", link:"javascript:UI.openPage('rit-list-items.x?project_id=${id}')"});
+	// #endlist
+	projectsMenu.addSeparator();
+	// #endif
+	projectsMenu.addOption({text:"Request Access", link:"javascript:UI.openPage('rit-request-access.x?do=list')"});
+	// Help menu:
+	var helpMenu = new Widgets.Menu({attachTo: DOM.id("b-help"), width: 100, align: "left"});
+	var toggleHelpText = Config.helpOn ? "Turn help off" : "Turn help on";
+	helpOption = helpMenu.addOption({text:toggleHelpText, link:"javascript:toggleHelp()", keepVisible:true});
+	helpMenu.addOption({text:"Help contents", link:"javascript:UI.openPage('files/about.html')"});
+	helpMenu.addOption({text:"About", link:"javascript:UI.openPage('files/about.html')"});
+	// Messages link:
+	DOM.id("b-messages").onclick = function() { UI.openPage("eu-list-messages.x"); };
+	// User menu:
+	var userMenu = new Widgets.Menu({attachTo:DOM.id("b-user"), width:"inherit", align:"right"});
+	userMenu.addOption({text:"Account Settings", link:"javascript:UI.openPage('eu-account-settings.x')"});
+	userMenu.addOption({text:"Sign Out", link:"logout"});
+	// Events:
+	projectsMenu.onShow = helpMenu.onShow = userMenu.onShow = bPress;
+	projectsMenu.onHide = helpMenu.onHide = userMenu.onHide = bRelease;	
+}
+</script>
+</head>
+
+<body class="fnt-text fs-body" onload="loadPage()">
+
+  <table border="0" width="100%" height="100%">
+    <!-- TOP BAR -->
+    <tr>
+	  <td width="100%" height="25" class="rit-top-bar">
+	    <table border="0" width="100%">
+		  <tr>
+		    <td class="top-bar-cell pointer" id="b-projects" style="padding-left:10px">Projects</td>
+		    <td class="top-bar-cell pointer" id="b-messages">Messages&nbsp;(0)</td>
+		    <td class="top-bar-cell pointer" id="b-help">Help</td>
+		    <td width="100%" align="right">
+			  <table border="0" id="b-user">
+		        <tr>
+		          <td class="top-bar-cell pointer" style="padding-right:0px">${screen-name}</td>
+		          <td class="pointer" style="padding-top:5px; padding-bottom: 5px"><img src="files/img/icon-account.png"/></td>
+		        </tr>
+		      </table>
+			</td>
+		  </tr>
+		</table>
+	  </td>
+	</tr>
+    <!-- MAIN IFRAME -->
+	<tr>
+	  <td align="left" width="100%">
+        <iframe
+        <!-- #if(has-projects-2) -->
+        src="rit-list-items.x?project_id=${id}" 
+        <!-- #else -->
+        src="rit-request-access.x?do=list&event=no-access" 
+        <!-- #endif -->
+        width="810" height="100" frameborder="0" name="main" scrolling="auto" id="frame-main">
+          <p>Your browser does not support iframes.</p>
+        </iframe>
+	  </td>
+	</tr>
+    <!-- BOTTOM BAR -->
+	<tr>
+	  <td width="100%" height="18" class="bottom-bar" valign="bottom">
+	  Risks and Issues Tracker uses the <a href="moot">Enterprise Application Platform</a>
+	  </td>
+	</tr>
+  </table>
+
+</body>
+</html>

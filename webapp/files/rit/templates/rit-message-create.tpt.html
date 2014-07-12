@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>New Access Request</title>
+<link href="files/styles.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript" type="text/javascript" src="files/generics.R1.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/constants.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/eap.R1.js"></script>
+<script>
+// Load:
+function loadPage() {
+	DOM.id("message").focus();
+}
+</script>
+</head>
+
+<body class="fnt-text" onload="loadPage()">
+
+	<div class="frm-section-title">New Access Request </div>
+
+	<form method="post">
+	<input type="hidden" name="action" value="create" />
+	<div class="frm-section-msg">
+		<table border="0" >
+		  <tr>
+			<td class="grid-label" width="60">Subject:</td>
+			<td class="grid-label" width="690"><strong>Request to access project "${prj-name}"</strong></td>
+		  </tr>
+		</table>
+	</div>
+	<div class="frm-section-msg">
+		<table border="0">
+		  <tr>
+			<td class="grid-label" width="60">To:</td>
+			<td class="grid-label" width="690"><strong>${owner}</strong></td>
+		  </tr>
+		</table>
+	</div>
+	<div class="frm-section-main">
+		<table border="0">
+		  #if(null-message)
+		  <tr>
+			<td colspan="2">
+				<div class="block-validation">
+				  <table border="0">
+					<tr>
+					  <td width="25"><img src="files/img/icon-error.png" /></td>
+					  <td style="vertical-align: middle">Please write a message before clicking "Send"</td>
+					</tr>
+				  </table>
+				</div>
+			</td>
+		  </tr>
+		  #endif
+		  <tr>
+			<td class="grid-field">
+			  <textarea name="message" id="message" style="width:740px; height:150px; border:none">
+			  I would like to access project ${prj-name}.
+
+			  Thanks,
+			  ${self}
+			  </textarea>
+			</td>
+		  </tr>
+		</table>
+	</div>
+	<!-- BUTTONS -->
+	<table>
+	  <tr>
+	    <td width="400">
+		  <input type="button" name="b_cancel" id="b_cancel" value="Cancel" class="button-danger" onclick="DOM.goto('eu-list-messages.x');" />
+		</td>
+		<td width="370" align="right">
+		  <input type="submit" name="b_send" id="b_send" value="Send" class="button-normal" />
+		</td>
+	  </tr>
+	</table>
+	</form>
+
+	<div class="frm-bottom"></div>
+
+</body>
+</html>

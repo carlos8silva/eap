@@ -1,0 +1,504 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Edit User Account</title>
+<link href="files/styles.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" media="all" href="files/external/jquery.jscrollpane.css" />
+<style type="text/css">
+<!--
+.small-title {
+	font-weight: bold;
+	padding-bottom: 7px;
+}
+-->
+</style>
+<script language="JavaScript" type="text/javascript" src="files/generics.R1.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/constants.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/eap.R1.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/external/jquery-1.4.2-min.js"></script> 
+<script language="JavaScript" type="text/javascript" src="files/external/jquery.mousewheel.js"></script> 
+<script language="JavaScript" type="text/javascript" src="files/external/jquery.jscrollpane.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/um-actions.js"></script>
+<script>
+var INFO_WIDTH = 220;
+var rList = new Widgets.SelectList();
+var rAssigned = null;
+var rAvailable = null;
+var pList = new Widgets.SelectList();
+var pAssigned = null;
+var pAvailable = null;
+
+function loadPage() {
+	// Initialize panes:
+	rAssigned = rList.addPane({attachTo: DOM.id("roles-assigned"), columns: ["Role", "Description", "Primary"], selectedColor: Constants.UI.COLOR_RED});
+	rAssigned.onCheck = function(radio) {
+		DOM.id("primary").value = radio.value;
+	};
+	rAvailable = rList.addPane({attachTo: DOM.id("roles-available"), columns: ["Role", "Description"]});
+	pAssigned = pList.addPane({attachTo: DOM.id("permissions-assigned"), columns: ["Permission", "Description"], selectedColor: Constants.UI.COLOR_RED});
+	pAvailable = pList.addPane({attachTo: DOM.id("permissions-available"), columns: ["Permission", "Description"]});
+	// Assigned roles:
+	#list(r-assigned)
+	rAssigned.addEntry(new Widgets.Entry("${id}", "${name}", "${description}", ${primary}));
+	#endlist
+	// Available roles:
+	#list(r-available)
+	rAvailable.addEntry(new Widgets.Entry("${id}", "${name}", "${description}", false));
+	#endlist
+	// Assigned permissions:
+	#list(p-assigned)
+	pAssigned.addEntry(new Widgets.Entry("${id}", "${name}", "${description}"));
+	#endlist
+	// Available permissions:
+	#list(p-available)
+	pAvailable.addEntry(new Widgets.Entry("${id}", "${name}", "${description}"));
+	#endlist
+	// Set the content panes:
+	rAssigned.redraw();
+	rAvailable.redraw();
+	pAssigned.redraw();
+	pAvailable.redraw();
+	
+	// Form elements:
+	var fc = FormManager.registerForm({form:document.forms[0], button:{id:"b_save", showProgress:true}, validator:checkForm});
+	fc.registerField({field:DOM.id("first_name"), name:"First name", mandatory:true, validator:checkFirstName,
+		info:"Please enter the user's first name. No numeric or punctuation characters are allowed",
+		width:INFO_WIDTH
+	});
+	fc.registerField({field:DOM.id("middle_initial"), name:"Middle initial", mandatory:false, validator:checkMiddleInitial,
+		info:"Please enter the user's middle initial, if applicable. No numeric or punctuation characters are allowed",
+		width:INFO_WIDTH, shift:{left:100}
+	});
+	var lastName = fc.registerField({field:DOM.id("last_name"), name:"Last name", mandatory:true, validator:checkLastName,
+		info:"Please enter the user's last name. No numeric or punctuation characters are allowed",
+		width:INFO_WIDTH
+	});
+	fc.registerField({field:DOM.id("username"), name:"Username", mandatory:true, validator:checkUsername,
+		info:"Please specify the user's username. Numeric and .-_ characters are allowed, but the first character must be a letter",
+		width:INFO_WIDTH
+	});
+	
+	// Automatically fill in username:
+	lastName.onBlur = function() {
+		var username = DOM.id("username");
+		if(username.value == "") {
+			var firstNameTxt = DOM.id("first_name").value;
+			var middleInitialTxt = DOM.id("middle_initial").value;
+			var lastNameTxt = this.domNode.value;
+			if(firstNameTxt != "" && lastNameTxt != "") {
+				var usernameTxt = Strings.trim(firstNameTxt)+".";
+				if(middleInitialTxt != "") {
+					usernameTxt += Strings.trim(middleInitialTxt)+".";
+				}
+				usernameTxt += Strings.trim(lastNameTxt);
+				username.value = usernameTxt.toLowerCase();
+			}
+		}
+	};
+
+	// Save button (with options):
+	#if(enable-user)
+	var bMenu = new Widgets.ButtonMenu({attachTo: DOM.id("b_save"), menuWidth: 120});
+	bMenu.addOption({text:"Disable account", link:"javascript:confirmDisableAccount('${username}');"});
+	#if(is-locked)
+	bMenu.addOption({text:"Unlock account", link:"javascript:unlockAccount();"});
+	#else
+	bMenu.addOption({text:"Lock account", link:"javascript:lockAccount();"});
+	bMenu.addOption({text:"Reset password", link:"javascript:resetPassword();"});
+	#endif
+	#endif
+	
+	// Button actions:
+	DOM.id("b_add_r").onclick = assignRoles;
+	DOM.id("b_remove_r").onclick = removeRoles;
+	DOM.id("b_add_p").onclick = assignPermissions;
+	DOM.id("b_remove_p").onclick = removePermissions;
+	
+	// Focus on username:
+	document.forms[0].first_name.focus();
+}
+
+function assignRoles() {
+	rAvailable.moveEntries();
+}
+
+function removeRoles() {
+	rAssigned.moveEntries();
+}
+
+function assignPermissions() {
+	pAvailable.moveEntries();
+}
+
+function removePermissions() {
+	pAssigned.moveEntries();
+}
+
+var userLoggedIn = ${user-logged-in};
+function lockAccount() {
+	if(userLoggedIn) {
+		var dialog = new top.Dialog({width:315});
+		dialog.setTitle({text: "Lock Account"});
+		dialog.setContents({text: 
+			"Locking this user account will log the user out and will prevent the user "+
+			"from logging back into the application. Are you sure you want to continue?"
+		});
+		dialog.addButton({text:"Lock Account", width:100, style: "red", handler:function(d) {
+			document.forms[0].action.value = "lock";
+			document.forms[0].submit();
+			d.hide();
+		}});
+		dialog.addButton({text:"Cancel", handler:function(d) {
+			d.hide();
+		}});
+		dialog.show();
+	}
+	else {
+		document.forms[0].action.value = "lock";
+		document.forms[0].submit();
+	}
+}
+
+function unlockAccount() {
+	document.forms[0].action.value = "unlock";
+	document.forms[0].submit();
+}
+
+function resetPassword() {
+	document.forms[0].action.value = "reset";
+	document.forms[0].submit();
+}
+
+function disableAccount() {
+	var dialog = new top.Dialog({width:315});
+	dialog.setTitle({text: "Disable Account"});
+	dialog.setContents({text: 
+		"Disabling this user account will delete all personal settings, prevent the user "+
+		"from logging back into the application, and make the ${username} username available "+
+		"for new user accounts. Are you sure you want to continue?"
+	});
+	dialog.addButton({text:"Disable Account", width:120, style: "red", handler:function(d) {
+		document.forms[0].action.value = "disable";
+		document.forms[0].submit();
+		d.hide();
+	}});
+	dialog.addButton({text:"Cancel", handler:function(d) {
+		d.hide();
+	}});
+	dialog.show();
+}
+
+var lastCheckedUsername = null;
+var showConfirmation = false;
+function checkUsername(field) {
+	var msg = EAP.checkIdentifier(field);
+	if(msg != null) {
+		return msg;
+	}
+	// Check username availability:
+	var request = new AjaxRequest({
+		url: "um-edit-user.x",
+		method: "get",
+		async: false,
+		parameters: Array({name:"id", value:"${user-id}"}, {name:"do", value:"check-username"}, DOM.id("username")),
+		onSuccess:function(xml) {
+			if(showConfirmation) {
+				FormManager.id("username").showValidation(true, "Username is available");
+			}
+		},
+		onFailure: function(errorCode, message) {
+			if(errorCode == "unavailable") {
+				msg = message;
+			}
+			else {
+				Logger.error("unknown error code ["+errorCode+"]: "+message);
+			}
+		}
+	});
+	// Verify whether we need to show a confirmation message after username.onBlur.
+	// Confirmation is only shown if:
+	// a) The username has been changed from its initial value
+	// b) The username has been changed from its previous value (only reconizes last value, not full history)
+	if(FormManager.id("username").hasChanged())  {
+		if(lastCheckedUsername != document.forms[0].username.value) {
+			showConfirmation = true;
+			lastCheckedUsername = document.forms[0].username.value;
+		}
+		else {
+			showConfirmation = false;
+		}
+	}
+	else {
+		lastCheckedUsername = null;
+		showConfirmation = false;
+	}
+	// Request must be sent always, otherwise validation is not done when submitting the form:
+	request.send();
+	return msg;
+}
+
+function checkFirstName(field) {
+	return _checkIsText(field, "First name");
+}
+
+function checkMiddleInitial(field) {
+	return _checkIsText(field, "Middle initial");
+}
+
+function checkLastName(field) {
+	return _checkIsText(field, "Last name");
+}
+
+function checkForm(form) {
+	var msgs = new Array();
+	// Format permissions in the request:
+	form.roles.value = Arrays.flatten({array:rAssigned.entries, separator:",", translator:function(entry) {return entry.id}});
+	form.permissions.value = Arrays.flatten({array:pAssigned.entries, separator:",", translator:function(entry) {return entry.id}});
+	// Check roles:
+	if(rAssigned.entries.length == 0) {
+		msgs.push("User must have at least one role");
+	}
+	else {
+		var primaryRole = false;
+		if(Radio.isRadioArray(form.checked_entry)) {
+			primaryRole = Radio.selectedIndex(form.checked_entry) != -1;
+		}
+		else {
+			primaryRole = form.checked_entry.checked;
+		}
+		if(!primaryRole) {
+			msgs.push("One of the user's roles must be a primary role");
+		}
+	}
+	// Check permissions:
+	var request = new AjaxRequest({
+		url: "um-edit-user.x",
+		method: "get",
+		async: false,
+		parameters: Array({name:"id", value:"${user-id}"}, {name:"do", value:"check-permissions"}, form.roles),
+		onSuccess: function(xml) {
+			var contents = xml.childNodes[1].childNodes[1];
+			for(var i=0; i<contents.childNodes.length; i++) {
+				var role = contents.childNodes[i];
+				for(var j=0; j<role.childNodes.length; j++) {
+					var permission = role.childNodes[j];
+					// Check if the permission is in the user's permissions:
+					for(var k=0; k<pAssigned.entries.length; k++) {
+						if(permission.getAttribute("id") == pAssigned.entries[k].id) {
+							msgs.push("Permission '"+permission.getAttribute("name")+
+								"' cannot be assigned to this user because it is already part of the '"+role.getAttribute("name")+"' role");
+						}
+					}
+				}
+				
+			}
+		},
+		onFailure: function(errorCode, message) {
+			Logger.error("unknown error code: "+errorCode+" [message :"+message+"]");
+		}
+	});
+	request.send();
+	return msgs;
+}
+</script>
+</head>
+
+<body class="fnt-text" onload="loadPage()">
+
+	<div class="frm-section-title">${title} User Account </div>
+
+	<form method="post">
+	<input type="hidden" name="id" value="${user-id}" />
+	<input type="hidden" name="action" value="${action}" />
+	<input type="hidden" name="roles" />
+	<input type="hidden" name="permissions" />
+	<input type="hidden" name="primary" id="primary" value="${primary}" />
+
+	<div class="frm-section-main">
+		#if(is-locked)
+		<div class="block-warn">
+		  <table cellpadding="0" cellspacing="0" border="0">
+		    <tr>
+			  <td width="25"><img src="files/img/icon-warn.png" /></td>
+			  <td style="vertical-align: middle">This user account is currently locked. Click <a href="javascript:unlockAccount();">here</a> to unlock...</td>
+			</tr>
+		  </table>
+		</div>
+		#endif
+		#if(do-enable)
+		<div class="block-warn">
+		  <table cellpadding="0" cellspacing="0" border="0">
+		    <tr>
+			  <td width="25"><img src="files/img/icon-warn.png" /></td>
+			  <td style="vertical-align: middle">This user account has not been enabled yet. Please review the account's information below and press "Save" to complete the operation</td>
+			</tr>
+		  </table>
+		</div>
+		#endif
+		#if(event-created)
+		<div class="block-ok">
+		  <table cellpadding="0" cellspacing="0" border="0">
+		    <tr>
+			  <td width="25"><img src="files/img/icon-ok.png" /></td>
+			  <td style="vertical-align: middle">User account has been created. ${name}'s temporary password is: <strong>${password}</strong></td>
+			</tr>
+		  </table>
+		</div>
+		#endif
+		#if(event-reset)
+		<div class="block-ok">
+		  <table cellpadding="0" cellspacing="0" border="0">
+		    <tr>
+			  <td width="25"><img src="files/img/icon-ok.png" /></td>
+			  <td style="vertical-align: middle">${name}'s password has been reset to <strong>${password}</strong></td>
+			</tr>
+		  </table>
+		</div>
+		#endif
+		#if(event-unlocked)
+		<div class="block-ok">
+		  <table cellpadding="0" cellspacing="0" border="0">
+		    <tr>
+			  <td width="25"><img src="files/img/icon-ok.png" /></td>
+			  <td style="vertical-align: middle">User account has been unlocked.</td>
+			</tr>
+		  </table>
+		</div>
+		#endif
+		#if(event-enabled)
+		<div class="block-ok">
+		  <table cellpadding="0" cellspacing="0" border="0">
+		    <tr>
+			  <td width="25"><img src="files/img/icon-ok.png" /></td>
+			  <td style="vertical-align: middle">User account has been enabled.</td>
+			</tr>
+		  </table>
+		</div>
+		#endif
+		#if(event-changed-permissions)
+		<div class="block-warn">
+		  <table cellpadding="0" cellspacing="0" border="0">
+		    <tr>
+			  <td width="25"><img src="files/img/icon-warn.png" /></td>
+			  <td style="vertical-align: middle">
+			  You have changed your own role and/or permissions. Your new permissions will only take effect 
+			  once you log out and log back into the application.
+			  </td>
+			</tr>
+		  </table>
+		</div>
+		#endif
+		<table cellpadding="0" cellspacing="0" border="0" width="750">
+		  <tr>
+			<td class="grid-subtitle" colspan="2">Personal Information</td>
+		  </tr>
+		  <tr>
+			<td class="grid-label" width="90">First name<span class="fnt-mandatory">*</span>:</td>
+			<td class="grid-field" width="640"><input type="text" class="text-small" name="first_name" id="first_name" value="${first-name}" /></td>
+		  </tr>
+		  <tr>
+			<td class="grid-label">Middle initial:</td>
+			<td class="grid-field"><input type="text" class="text-smallest" name="middle_initial" id="middle_initial" value="${middle-initial}" /></td>
+		  </tr>
+		  <tr>
+			<td class="grid-label">Last name<span class="fnt-mandatory">*</span>:</td>
+			<td class="grid-field"><input type="text" class="text-small" name="last_name" id="last_name" value="${last-name}" /></td>
+		  </tr>
+		  <tr>
+			<td class="grid-label" colspan="2" height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="grid-label">Username<span class="fnt-mandatory">*</span>:</td>
+			<td class="grid-field"><input type="text" class="text-small" name="username" id="username" value="${username}" /></td>
+		  </tr>
+		  <tr>
+			<td class="grid-label">Password:</td>
+			<td class="grid-label">
+			<!-- #if(do-create) -->
+			The user's password will be automatically generated
+			<!-- #else -->
+			For security reasons, user passwords are not displayed
+			<!-- #endif -->
+			</td>
+		  </tr>
+		</table>
+	</div>
+
+	<div class="frm-section-main">
+	  <table cellpadding="0" cellspacing="0" border="0" width="750">
+		<tr>
+		  <td class="grid-subtitle" colspan="2">Roles</td>
+		</tr>
+		<tr>
+		  <td class="grid-text" colspan="2">
+			Select the roles that this user can perform. Please note that one role must be set as the user's primary role.
+			The primary role may affect the way that the application looks and feels.
+		  </td>
+		</tr>
+		<tr>
+		  <td width="400" class="small-title">Assigned roles:</td>
+		  <td width="350" class="small-title">Available roles:</td>
+		</tr>
+		<tr>
+		  <td id="roles-assigned"></td>
+		  <td id="roles-available"></td>
+		</tr>
+	  </table>
+	  <table cellpadding="0" cellspacing="0" border="0" width="750">
+		<tr>
+		  <td align="right" width="390"><input type="button" name="b_remove_r" id="b_remove_r" value="Remove" class="button-pright-100" /></td>
+		  <td width="10">&nbsp;</td>
+		  <td align="left" width="350"><input type="button" name="b_add_r" id="b_add_r" value="Add" class="button-pleft" /></td>
+		</tr>
+	  </table>
+	</div>
+
+	<div class="frm-section-main">
+	  <table cellpadding="0" cellspacing="0" border="0" width="750">
+		<tr>
+		  <td class="grid-subtitle" colspan="2">Individual permissions</td>
+		</tr>
+		<tr>
+		  <td class="grid-text" colspan="2">
+			Select individual permissions that this user account should have access to. Please note that
+			permissions that are already assigned to any of the user's roles cannot be assigned as individual permissions.
+		  </td>
+		</tr>
+		<tr>
+		  <td width="380" class="small-title">Assigned permissions:</td>
+		  <td width="350" class="small-title">Available permissions:</td>
+		</tr>
+		<tr>
+		  <td id="permissions-assigned"></td>
+		  <td id="permissions-available"></td>
+		</tr>
+	  </table>
+	  <table cellpadding="0" cellspacing="0" border="0" width="750">
+		<tr>
+		  <td align="right" width="370"><input type="button" name="b_remove_p" id="b_remove_p" value="Remove" class="button-pright-100" /></td>
+		  <td width="10">&nbsp;</td>
+		  <td align="left" width="370"><input type="button" name="b_add_p" id="b_add_p" value="Add" class="button-pleft" /></td>
+		</tr>
+	  </table>
+	  <!-- The save buttons also need to be in a separate table... -->
+	</div>
+
+	<!-- BUTTONS -->
+	<table>
+	  <tr>
+	    <td width="400">
+		  <input type="button" name="b_cancel" id="b_cancel" value="Back" class="button-normal" onclick="DOM.goto('um-list-users.x');" />
+		</td>
+		<td width="370" align="right">
+		  <input type="submit" name="b_save" id="b_save" value="Save" class="button-normal" />
+		</td>
+	  </tr>
+	</table>
+
+	</form>
+
+	<div class="frm-bottom"></div>
+
+</body>
+</html>

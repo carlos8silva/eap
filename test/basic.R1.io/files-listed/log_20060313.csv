@@ -1,0 +1,27 @@
+Type;ID;date;Trace;Message
+INFO;1142208175806;2006-03-13;tests.generics.UtilTester.testCsvLogger(UtilTester.java:37);this is an info message
+ERROR;1142208175816;2006-03-13;com.netx.generics.basic.Logger.error(Logger.java:68);this is an exception message
+INFO;1142208177028;2006-03-13;tests.generics.UtilTester.testCsvLogger(UtilTester.java:37);this is an info message
+ERROR;1142208177028;2006-03-13;com.netx.generics.basic.Logger.error(Logger.java:68);this is an exception message
+INFO;1142208180823;2006-03-13;tests.generics.UtilTester.testCsvLogger(UtilTester.java:37);this is an info message
+ERROR;1142208180833;2006-03-13;com.netx.generics.basic.Logger.error(Logger.java:68);this is an exception message
+INFO;1142208185650;2006-03-13;tests.generics.UtilTester.testCsvLogger(UtilTester.java:37);this is an info message
+ERROR;1142208185660;2006-03-13;com.netx.generics.basic.Logger.error(Logger.java:68);this is an exception message
+INFO;1142208187302;2006-03-13;tests.generics.UtilTester.testCsvLogger(UtilTester.java:37);this is an info message
+ERROR;1142208187302;2006-03-13;com.netx.generics.basic.Logger.error(Logger.java:68);this is an exception message
+INFO;1142208189896;2006-03-13;tests.generics.UtilTester.testCsvLogger(UtilTester.java:37);this is an info message
+ERROR;1142208189906;2006-03-13;com.netx.generics.basic.Logger.error(Logger.java:68);this is an exception message
+INFO;1142208197247;2006-03-13;tests.generics.UtilTester.testCsvLogger(UtilTester.java:37);this is an info message
+ERROR;1142208197257;2006-03-13;com.netx.generics.basic.Logger.error(Logger.java:68);this is an exception message
+INFO;1142208269323;2006-03-13;tests.generics.UtilTester.testCsvLogger(UtilTester.java:37);this is an info message
+ERROR;1142208269323;2006-03-13;com.netx.generics.basic.Logger.error(Logger.java:68);this is an exception message
+INFO;1142208363919;2006-03-13;tests.generics.UtilTester.testCsvLogger(UtilTester.java:37);this is an info message
+ERROR;1142208363919;2006-03-13;com.netx.generics.basic.Logger.error(Logger.java:68);this is an exception message
+INFO;1142208405268;2006-03-13;tests.generics.UtilTester.testCsvLogger(UtilTester.java:37);this is an info message
+ERROR;1142208405268;2006-03-13;com.netx.generics.basic.Logger.error(Logger.java:68);this is an exception message
+INFO;1142554096570;2006-03-17;tests.generics.UtilTester.testCsvLogger(UtilTester.java:37);this is an info message
+ERROR;1142554096570;2006-03-17;com.netx.generics.basic.Logger.error(Logger.java:68);this is an exception message
+INFO;1142554109178;2006-03-17;tests.generics.UtilTester.testCsvLogger(UtilTester.java:37);this is an info message
+ERROR;1142554109178;2006-03-17;com.netx.generics.basic.Logger.error(Logger.java:68);this is an exception message
+INFO;1142640534284;2006-03-18;tests.generics.UtilTester.testCsvLogger(UtilTester.java:37);this is an info message
+ERROR;1142640534284;2006-03-18;com.netx.generics.basic.Logger.error(Logger.java:68);this is an exception message

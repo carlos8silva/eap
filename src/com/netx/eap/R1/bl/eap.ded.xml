@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<business-logic module="eap">
+	<entity name="Users" table-name="eap_users">
+		<primary-key>
+			<field name="user_id" type="autonumber" />
+		</primary-key>
+		<fields>
+			<field name="username" type="text(20)" mandatory="true" />
+			<field name="password" type="text(20)" case-sensitive="true" mandatory="true" />
+			<field name="screen_name" type="text(20)" mandatory="true" />
+			<field name="full_name" type="text(50)" mandatory="true" />
+		</fields>
+		<association name="UserRoles" table-name="eap_user_roles">
+			<associated-entity name="Roles" />
+		</association>
+		<association name="UserPermissions" table-name="eap_user_permissions">
+			<associated-entity name="FunctionEntries" />
+		</association>
+		<constraints>
+			<unique>username</unique>
+		</constraints>
+	</entity>
+	<entity name="Roles" table-name="eap_roles">
+		<primary-key>
+			<field name="role_id" type="autonumber" />
+		</primary-key>
+		<fields>
+			<field name="name" type="text(50)" mandatory="true" />
+			<field name="description" type="text(200)" />
+		</fields>
+		<association name="RolePermissions" table-name="eap_role_permissions">
+			<associated-entity name="FunctionEntries" />
+		</association>
+	</entity>
+</business-logic>

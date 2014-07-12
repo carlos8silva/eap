@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Edit User Account </title>
+<link href="files/styles.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+<!--
+.text-small {
+	width: 150px;
+}
+-->
+</style>
+<script language="JavaScript" type="text/javascript" src="files/generics.R1.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/constants.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/eap.R1.js"></script>
+<script>
+// Load:
+function loadPage() {
+#list(role-descs)
+	new Widgets.Overlay({
+		attachTo: DOM.id("role-${i}"), title: "${role-name}", content: "${role-desc}", width: 180,
+		shift: {left: 0, top: (System.browser.ie ? -12 : 0)}
+	});
+#endlist
+#list(perm-descs)
+	new Widgets.Overlay({
+		attachTo: DOM.id("perm-${i}"), title: "${perm-name}", content: "${perm-desc}", width: 180,
+		shift: {left: 0, top: (System.browser.ie ? -12 : 0)}
+	});
+#endlist
+	var fc = FormManager.registerForm({form: document.forms[0], button: {id: "b_enable", showProgress: true}});
+}
+</script>
+</head>
+
+<body class="fnt-text" onload="loadPage()">
+
+	<div class="frm-section-title">Edit User Account </div>
+
+	<form method="get">
+	<input type="hidden" name="id" value="${user-id}" />
+	<input type="hidden" name="do" value="enable" />
+	<div class="frm-section-main">
+		<div class="separator"></div>
+		#if(event-disabled)
+		<div class="block-ok">
+		  <table cellpadding="0" cellspacing="0" border="0">
+		    <tr>
+			  <td width="25"><img src="files/img/icon-ok.png" /></td>
+			  <td style="vertical-align: middle">User account has been disabled.</td>
+			</tr>
+		  </table>
+		</div>
+		#else
+		<div class="block-error">
+		  <table cellpadding="0" cellspacing="0" border="0">
+		    <tr>
+			  <td width="25"><img src="files/img/icon-error.png" /></td>
+			  <td style="vertical-align: middle">This user account is disabled.</td>
+			</tr>
+		  </table>
+		</div>
+		#endif
+		<table cellpadding="0" cellspacing="0" border="0" width="750">
+		  <tr>
+			<td class="grid-label" width="102">Username:</td>
+			<td class="grid-label" width="648"><strong>${username}</strong></td>
+		  </tr>
+		  <tr>
+			<td class="grid-label">Name:</td>
+			<td class="grid-label"><strong>${full-name}</strong></td>
+		  </tr>
+		  <tr>
+			<td class="grid-label">Roles:</td>
+			<td class="grid-label">
+				<!-- #list(roles) -->
+				<span id="role-${i}"><strong>${role-name}</strong></span>, 
+				<!-- #last -->
+				<span id="role-${i}"><strong>${role-name}</strong></span>
+				<!-- #endlist -->
+			</td>
+		  </tr>
+		  <tr>
+			<td class="grid-label">Permissions: </td>
+			<td class="grid-label">
+			<!-- #if(has-individual-perms) -->
+				<!-- #list(perms) -->
+				<span id="perm-${i}"><strong>${perm-name}</strong></span>,
+				<!-- #last -->
+				<span id="perm-${i}"><strong>${perm-name}</strong></span>
+				<!-- #endlist -->
+			<!-- #else -->
+				<strong>None</strong>
+			<!-- #endif -->
+			</td>
+		  </tr>
+		  <tr>
+			<td class="grid-label">Created on:</td>
+			<td class="grid-label"><strong>${date-created}</strong></td>
+		  </tr>
+		  <tr>
+			<td class="grid-label">Disabled on:</td>
+			<td class="grid-label"><strong>${date-disabled}</strong></td>
+		  </tr>
+		  <tr>
+			<td class="grid-button" colspan="2">
+		      <input type="submit" name="b_enable" id="b_enable" value="Enable" class="button-normal" />
+			</td>
+		  </tr>
+		</table>
+	</div>
+	</form>
+
+	<div class="frm-bottom"></div>
+
+</body>
+</html>

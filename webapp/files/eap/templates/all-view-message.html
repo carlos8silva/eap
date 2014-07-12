@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>View System Message</title>
+<link href="files/styles.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+<!--
+.text-small {
+	width: 150px;
+}
+.text-med {
+	width: 230px;
+}
+.text-large {
+	width: 300px;
+}
+-->
+</style>
+<script language="JavaScript" type="text/javascript" src="files/generics.R1.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/constants.js"></script>
+<script language="JavaScript" type="text/javascript" src="files/eap.R1.js"></script>
+<script>
+
+
+// Load:
+function loadPage() {
+#list(js-roles)
+	new Widgets.Overlay({
+		attachTo: DOM.id("role-${i}"), title: "${role-name}", content: "${role-desc}", width: 180,
+		shift: {left: 0, top: (System.browser.ie ? -12 : 0)}
+	});
+#endlist
+}
+</script>
+</head>
+
+<body class="fnt-text" onload="loadPage()">
+
+	<div class="frm-section-title">View System Message </div>
+
+	<form method="post">
+	<input type="hidden" name="action" value="list-messages" />
+	<div class="frm-section-main">
+		<table cellpadding="0" cellspacing="0" border="0">
+		  <tr>
+			<td class="grid-subtitle" colspan="2">Message</td>
+		  </tr>
+		  <tr>
+			<td class="grid-label" width="102">From:</td>
+			<td class="grid-label" width="648"><strong>${fromName}</strong></td>
+		  </tr>
+		  <tr>
+			<td class="grid-label">To:</td>
+			<td class="grid-label"><strong>${toName}
+				<br><br>ROLES: 
+				<!-- #list(roles) -->
+				<span id="role-${i}"><strong>${role-name}</strong></span>, 
+				<!-- #last -->
+				<span id="role-${i}"><strong>${role-name}</strong></span>
+				<!-- #endlist -->
+				</strong></td>
+		  </tr>
+		  <tr>
+			<td class="grid-label">Date Sent:</td>
+			<td class="grid-label"><strong>${dateSent}</strong></td>
+		  </tr>
+		  <tr>
+			<td class="grid-label">Subject:</td>
+			<td class="grid-label"><strong>${subject}</strong></td>
+		  </tr>
+		  <tr>
+			<td class="grid-label">Message:</td>
+			<td class="grid-label"><strong>${message}</strong></td>
+		  </tr>
+		  <tr>
+			<td class="grid-label">Reference #:</td>
+			<td class="grid-label"><strong>${refNum}</strong></td>
+		  </tr>
+		  <tr>
+			<td class="grid-button" colspan="2">
+		      <input type="submit" name="b_account_settings" id="b_account_settings" value="Close" class="button-normal" />
+			</td>
+		  </tr>
+		</table>
+	</div>
+	</form>
+
+	<div class="frm-bottom"></div>
+
+</body>
+</html>
